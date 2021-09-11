@@ -1,7 +1,7 @@
 <?php
 // Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
 function include_template($name, array $data = []) {
-    $name = __DIR__.'templates/' . $name;
+    $name = __DIR__ . '/templates/' . $name;
 
     ob_start();
     extract($data);
