@@ -18,7 +18,7 @@
             <?php foreach ($product_card as $value): ?>
                 <li class="lots__item lot">
                     <div class="lot__image">
-                        <img src="<?= $value['url_image'] ?>" width="350" height="260" alt="">
+                        <img src="<?= esc($value['url_image']) ?>" width="350" height="260" alt="">
                     </div>
                     <div class="lot__info">
                         <span class="lot__category"><?= esc($value['category']) ?></span>
@@ -26,7 +26,7 @@
                         <div class="lot__state">
                             <div class="lot__rate">
                                 <span class="lot__amount">Стартовая цена</span>
-                                <span class="lot__cost"><?= price_format($value['price']) ?></span>
+                                <span class="lot__cost"><?= esc(price_format($value['price'])) ?></span>
                             </div>
                             <div class="lot__timer timer">
                                 12:23
