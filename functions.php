@@ -30,11 +30,8 @@ function difference_date($future_date) {
     $hours = floor($time_expires_sec / 3600); //Колличество часов до нужного события
     $minutes = floor(($time_expires_sec % 3600) / 60); //Колличество минут до нужного события
 
-    if ($hours < 10) {$hours = str_pad($hours, 2, "0", STR_PAD_LEFT);}
-    if ($hours < 0) {$hours = "00";}
-
-    if ($minutes < 10) {$minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);}
-    if ($minutes < 0) {$minutes = "00";}
+    $hours = ($hours < 0) ? "00" : str_pad($hours, 2, "0", STR_PAD_LEFT);
+    $minutes = ($minutes < 0) ? "00" : str_pad($minutes, 2, "0", STR_PAD_LEFT);
 
     return [$hours, $minutes]; //Массив с остатком времени
 }

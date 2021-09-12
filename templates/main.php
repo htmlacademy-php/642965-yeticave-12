@@ -16,8 +16,7 @@
         </div>
         <ul class="lots__list">
             <?php foreach ($product_card as $value):
-                $result_time_arr = difference_date($value['lot_expiration_date']); //функция вернула остаток времени [часы, минуты]
-                $result_time = $result_time_arr[0] . ":" . $result_time_arr[1];
+                list ($hours, $minutes) = difference_date($value['lot_expiration_date']);
             ?>
             <li class="lots__item lot">
                 <div class="lot__image">
@@ -31,8 +30,8 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?= esc(price_format($value['price'])) ?></span>
                         </div>
-                        <div class="lot__timer timer <?php if ($result_time_arr[0] < 1) {echo 'timer--finishing';} ?>">
-                        <?php echo esc($result_time) ?>
+                        <div class="lot__timer timer <?php if ($hours < 1): ?> timer--finishing <? endif; ?>">
+                        <?= esc($hours) ?>:<?= esc($minutes) ?>
                         </div>
                     </div>
                 </div>
