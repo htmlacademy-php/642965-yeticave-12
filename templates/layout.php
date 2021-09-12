@@ -36,7 +36,7 @@
                             <a href="#">Вход</a>
                         </li>
                     </ul>
-                <?php endif; ?>
+                <?php endif ?>
             </nav>
         </div>
     </header>
@@ -50,7 +50,7 @@
                 <li class="nav__item">
                     <a href="pages/all-lots.html"><?= esc($value) ?></a>
                 </li>
-            <?php endforeach; ?>
+            <?php endforeach ?>
         </ul>
     </nav>
     <div class="main-footer__bottom container">

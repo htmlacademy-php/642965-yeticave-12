@@ -7,7 +7,7 @@
                 <li class="promo__item promo__item--boards">
                     <a class="promo__link" href="pages/all-lots.html"><?= esc($value) ?></a>
                 </li>
-            <?php endforeach; ?>
+            <?php endforeach ?>
         </ul>
     </section>
     <section class="lots">
@@ -30,13 +30,13 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?= esc(price_format($value['price'])) ?></span>
                         </div>
-                        <div class="lot__timer timer <?php if ($hours < 1): ?> timer--finishing <? endif; ?>">
+                        <div class="lot__timer timer <?php if ($hours < 1): ?> timer--finishing <?php endif ?>">
                         <?= esc($hours) ?>:<?= esc($minutes) ?>
                         </div>
                     </div>
                 </div>
             </li>
-            <?php endforeach; ?>
+            <?php endforeach ?>
         </ul>
     </section>
 </main>
