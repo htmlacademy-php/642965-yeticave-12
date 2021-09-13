@@ -1,38 +1,37 @@
 CREATE DATABASE yeticave_12
-  DEFAULT CHARACTER SET utf8
-  DEFAULT COLLATE utf8_general_ci;
+  DEFAULT CHARACTER SET utf8mb4;
 
 CREATE TABLE lots (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  dt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  name_lot CHAR(128) NOT NULL,
-  description CHAR(255),
-  image CHAR(128),
+  dt_create DATETIME DEFAULT CURRENT_TIMESTAMP,
+  name_lot VARCHAR(128) NOT NULL,
+  description VARCHAR(255),
+  image VARCHAR(128),
   price_start INT NOT NULL ,
-  dt_complete TIMESTAMP,
+  dt_complete DATETIME,
   bid_step INT NOT NULL,
   category_id INT,
   user_id INT,
-  bid_id INT
+  user_winner_id INT
 );
 CREATE TABLE categories (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name_cat CHAR(64) NOT NULL,
-  symbol CHAR(64) NOT NULL
+  name_cat VARCHAR(64) NOT NULL,
+  symbol VARCHAR(64) NOT NULL
 );
 CREATE TABLE bids (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  dt_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  dt_add DATETIME DEFAULT CURRENT_TIMESTAMP,
   price INT NOT NULL,
   lot_id INT,
   user_id INT
 );
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  dt_registration TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  email CHAR(64) NOT NULL,
-  first_name CHAR(64) NOT NULL,
-  password CHAR(64) NOT NULL,
+  dt_registration DATETIME DEFAULT CURRENT_TIMESTAMP,
+  email VARCHAR(64) NOT NULL,
+  first_name VARCHAR(64) NOT NULL,
+  password VARCHAR(64) NOT NULL,
   contacts TEXT NOT NULL
 );
 CREATE UNIQUE INDEX email ON users(email);
