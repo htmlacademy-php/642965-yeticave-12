@@ -12,7 +12,8 @@ CREATE TABLE lots (
   dt_complete TIMESTAMP,
   bid_step INT NOT NULL,
   category_id INT,
-  user_id INT
+  user_id INT,
+  bid_id INT
 );
 CREATE TABLE categories (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,5 +35,4 @@ CREATE TABLE users (
   password CHAR(64) NOT NULL,
   contacts TEXT NOT NULL
 );
-CREATE INDEX l_name ON lots(name_lot);
 CREATE UNIQUE INDEX email ON users(email);
