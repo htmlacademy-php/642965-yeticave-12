@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Григорий Пруглов](https://up.htmlacademy.ru/php/12/user/642965).
-* Наставник: [Максим Деев](https://htmlacademy.ru/profile/id685777).
+* Наставник: [Роман Шевченко](https://htmlacademy.ru/profile/id1242631).
 
 ---
 
