@@ -35,3 +35,4 @@ CREATE TABLE users (
   contacts TEXT NOT NULL
 );
 CREATE UNIQUE INDEX email ON users(email);
+CREATE INDEX date_complete ON lots(dt_complete);
