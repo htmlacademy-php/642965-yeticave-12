@@ -107,3 +107,18 @@ SELECT name_lot, price, first_name, email, dt_add FROM lots
 SELECT first_name, email, price, name_lot FROM bids
   JOIN users u ON u.id = bids.user_id
     JOIN lots l ON l.id = bids.lot_id  WHERE email = 'blacksea@mail.ru';
+
+# Покажет только тех пользователей, которые делали ставки и их колличество.
+SELECT first_name, email, COUNT(b.id) bids_total FROM users u
+  JOIN bids b ON u.id = b.user_id
+    GROUP BY email ORDER BY bids_total DESC;
+
+# Список лотов пользователя
+SELECT first_name, email, name_lot FROM users u
+  JOIN lots l on u.id = l.user_id
+    ORDER BY first_name ASC;
+
+# Покажет только тех пользователей, которые создали лот и колличество лотов ими созданных.
+SELECT first_name, email, COUNT(l.id) lot_total FROM users u
+  JOIN lots l on u.id = l.user_id
+    GROUP BY email ORDER BY lot_total DESC;
