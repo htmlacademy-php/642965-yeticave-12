@@ -1,6 +1,6 @@
 <?php
 require 'functions.php';
-require 'db/db_connect.php'; //подключение к бд и получение списка категорий
+require 'db/db_connect.php'; //Файл инициализации приложения
 $is_auth = rand(0, 1);
 
 $sql_lots = 'SELECT l.id, name_lot, price_start, image, name_cat, dt_complete
@@ -14,7 +14,7 @@ $page_content = include_template('index_main.php', [
     'product_card' => $product_card,
 ]);
 
-$layout_content = include_template('index_page.php', [
+$layout_content = include_template('layout.php', [
     'page_title' => 'Аукцион горнолыжного оборудования',
     'user_name' => 'Григорий',
     'is_auth' => $is_auth,

@@ -1,6 +1,7 @@
 <?php
 require 'functions.php';
-require 'db/db_connect.php'; //подключение к бд и получение списка категорий
+require 'db/db_connect.php'; //Файл инициализации приложения
+$is_auth = rand(0, 1);
 
 if (isset($_GET['id'])) {
     $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
@@ -20,19 +21,17 @@ if (!isset($lot_card)) {
     http_response_code(404);
 }
 
-$lot_content_right = include_template('lot_content_right.php', [
-    'lot_card' => $lot_card,
-]);
-
-$lot_content = include_template('lot_content.php', [
-    'lot_card' => $lot_card,
-    'lot_content_right' => $lot_content_right,
-]);
-
-$lot_page = include_template('lot_page.php', [
-    'lot_card' => $lot_card,
+$page_content = include_template('lot_main.php', [
     'categories' => $categories,
-    'lot_content' => $lot_content,
+    'lot_card' => $lot_card,
 ]);
 
-echo $lot_page;
+$layout_content = include_template('layout.php', [
+    'page_title' => $lot_card['name_lot'],
+    'user_name' => 'Григорий',
+    'is_auth' => $is_auth,
+    'page_content' => $page_content,
+    'categories' => $categories,
+]);
+
+echo $layout_content;
