@@ -1,7 +1,5 @@
 <?php
-require 'functions.php';
-require 'db/db_connect.php'; //Файл инициализации приложения
-$is_auth = rand(0, 1);
+require 'init.php'; //Файл инициализации приложения
 
 $sql_lots = 'SELECT l.id, name_lot, price_start, image, name_cat, dt_complete
              FROM lots l, categories c WHERE category_id = c.id AND dt_complete > NOW() ORDER BY dt_create DESC';

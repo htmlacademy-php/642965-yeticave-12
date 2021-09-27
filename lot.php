@@ -1,14 +1,12 @@
 <?php
-require 'functions.php';
-require 'db/db_connect.php'; //Файл инициализации приложения
-$is_auth = rand(0, 1);
+require 'init.php'; //Файл инициализации приложения
 
 if (isset($_GET['id'])) {
     $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 }
 else {
-    $id = 0;
     http_response_code(404);
+    exit;
 }
 
 $sql_lot = 'SELECT l.id, name_lot, image, name_cat, description, price_start, dt_complete
