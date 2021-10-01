@@ -6,7 +6,7 @@ $is_auth = rand(0, 1);
 error_reporting(E_ALL);
 ini_set('display_errors', $db['env_local']);
 
-if (!file_exists('config/config.php')) {
+if (!file_exists( __DIR__ . '/config/config.php')) {
     $msg = 'Создайте файл config.php на основе config.sample.php и внесите туда настройки сервера MySQL';
     trigger_error($msg,E_USER_ERROR);
 }
