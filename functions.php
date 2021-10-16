@@ -86,3 +86,10 @@ function is_date_valid($value) {
         return "Введите дату в правильном формате";
         }
 }
+//Проверяет расширение файла
+function validateFileExt($filename) : bool {
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    $allowed = ['png', 'jpg', 'jpeg'];
+
+    return in_array($ext, $allowed);
+}

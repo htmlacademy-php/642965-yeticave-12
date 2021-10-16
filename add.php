@@ -37,17 +37,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = array_filter($errors);
 
     if (!empty($_FILES['file_img']['name'])) {
-        $tmp_name = $_FILES['file_img']['tmp_name'];
         $file_name = $_FILES['file_img']['name'];
-        $file_path = 'uploads/';
-        $file_type = mime_content_type($tmp_name);
 
-        if ($file_type == "image/png" || $file_type == "image/jpeg") {
-            move_uploaded_file($tmp_name, $file_path . $file_name);
-            $lot['path'] = $file_path . $file_name;
+        if (validateFileExt($file_name)) {
+            $tmp_name = $_FILES['file_img']['tmp_name'];
+            $file_path = 'uploads/';
+            $file_type = mime_content_type($tmp_name);
+
+            if ($file_type == "image/png" || $file_type == "image/jpeg") {
+                move_uploaded_file($tmp_name, $file_path . $file_name);
+                $lot['path'] = $file_path . $file_name;
+            }
+            else {
+                $errors['file'] = 'Неверный тип файла!';
+            }
         }
         else {
-            $errors['file'] = 'Загрузите картинку в формате JPEG или PNG';
+            $errors['file'] = 'Загрузите картинку с расширением JPEG или PNG';
         }
     }
     else {
@@ -68,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $lot_id = mysqli_insert_id($con);
         header('Location: lot.php?id=' . $lot_id);
+        die;
     }
 }
 else {
