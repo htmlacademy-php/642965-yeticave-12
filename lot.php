@@ -29,8 +29,6 @@ $page_content = include_template('lot_main.php', [
 
 $layout_content = include_template('layout.php', [
     'page_title' => $lot_card['name_lot'],
-    'user_name' => 'Григорий',
-    'is_auth' => $is_auth,
     'page_content' => $page_content,
     'categories' => $categories,
 ]);

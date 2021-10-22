@@ -1,6 +1,5 @@
 <?php
 require __DIR__ . '/functions.php'; // Подключение пользовательских функций.
-$is_auth = rand(0, 1);
 
 if (!file_exists( __DIR__ . '/config/config.php')) {
     $msg = 'Создайте файл config.php на основе config.sample.php и внесите туда настройки сервера MySQL';

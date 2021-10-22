@@ -34,31 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[$key] = $rule($value);
         }
     }
+
+    $errors['file'] = validateFile();
     $errors = array_filter($errors);
-
-    if (!empty($_FILES['file_img']['name'])) {
-        $file_name = $_FILES['file_img']['name'];
-
-        if (validateFileExt($file_name)) {
-            $tmp_name = $_FILES['file_img']['tmp_name'];
-            $file_path = 'uploads/';
-            $file_type = mime_content_type($tmp_name);
-
-            if ($file_type == "image/png" || $file_type == "image/jpeg") {
-                move_uploaded_file($tmp_name, $file_path . $file_name);
-                $lot['path'] = $file_path . $file_name;
-            }
-            else {
-                $errors['file'] = 'Неверный тип файла!';
-            }
-        }
-        else {
-            $errors['file'] = 'Загрузите картинку с расширением JPEG или PNG';
-        }
-    }
-    else {
-        $errors['file'] = 'Вы не загрузили файл изображения';
-    }
 
     if (count($errors)) {
         $page_content = include_template('add_lot.php', [
@@ -67,6 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
     }
     else {
+        move_uploaded_file($_FILES['file_img']['tmp_name'], 'uploads/' . $_FILES['file_img']['name']);
+        $lot['path'] = 'uploads/' . $_FILES['file_img']['name'];
+
         $sql_ins_lot = 'INSERT INTO lots SET dt_create = NOW(), user_id = 9, name_lot = ?, category_id = ?, description = ?, price_start = ?, bid_step = ?, dt_complete = ?, image = ?';
         $stmt = $con->prepare($sql_ins_lot);
         $stmt->bind_param('sisdiss', $lot['lot-name'], $lot['category'], $lot['message'], $lot['lot-rate'], $lot['lot-step'], $lot['lot-date'], $lot['path']);
@@ -85,8 +66,6 @@ else {
 
 $layout_content = include_template('layout.php', [
     'page_title' => 'Добавление лота',
-    'user_name' => 'Григорий',
-    'is_auth' => $is_auth,
     'page_content' => $page_content,
     'categories' => $categories,
 ]);

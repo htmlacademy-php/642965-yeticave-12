@@ -43,7 +43,7 @@ function getPostVal($name) {
 // Функция для проверки заполнености
 function validateFilled($value) {
     if (empty($value)) {
-        return "Напишите наименование лота";
+        return "Заполните пожалуйста это поле";
     }
 }
 // Функция для проверки длины
@@ -51,7 +51,7 @@ function isCorrectLength($value, $min, $max) {
     $len = strlen($value);
 
     if ($len < $min or $len > $max) {
-        return "Напишите описание лота длиной от $min до $max символов";
+        return "Длина поля от $min до $max символов";
     }
 }
 // Функция для проверки категории
@@ -86,10 +86,45 @@ function is_date_valid($value) {
         return "Введите дату в правильном формате";
         }
 }
-//Проверяет расширение файла
-function validateFileExt($filename) : bool {
-    $ext = pathinfo($filename, PATHINFO_EXTENSION);
-    $allowed = ['png', 'jpg', 'jpeg'];
+// Валидация файла. Проверка расширения и MIME типа.
+function validateFile() {
+    if (!empty($_FILES['file_img']['name'])) {
+        $file_name = $_FILES['file_img']['name'];
+        $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+        $allowed = ['png', 'jpg', 'jpeg'];
 
-    return in_array($ext, $allowed);
+        if (in_array($ext, $allowed)) {
+            $tmp_name = $_FILES['file_img']['tmp_name'];
+            $file_type = mime_content_type($tmp_name);
+
+            if ($file_type !== "image/jpeg" and $file_type !== "image/png") {
+                return 'Неверный тип файла!';
+            }
+        }
+        else {
+            return 'Загрузите картинку с расширением JPEG или PNG';
+        }
+    }
+    else {
+        return 'Вы не загрузили файл изображения';
+    }
+}
+// Валидация email.
+function validateEmail($value) {
+    if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        return 'Введите корректный Email';
+    }
+}
+// Проверяет есть ли в бд пользователи с таким email.
+function validateRegEmail($con) {
+        $email = $con->real_escape_string($_POST['email']);
+        $sql = 'SELECT id FROM users WHERE email = ?';
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        if (mysqli_num_rows($res) > 0) {
+            return 'Пользователь с этим email уже зарегистрирован';
+        }
 }
