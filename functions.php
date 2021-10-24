@@ -73,12 +73,12 @@ function validateStep($value) {
     }
 }
 // Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД' и отсутствие ошибок
-// сравнивает с текущей датой + 1 сутки.
-function is_date_valid($value) {
+// Дата окончания лота должна быть больше текущей хотя бы на 1 сутки
+function dateCompleteValid($value, $min_days) {
     $dt_complete = DateTime::createFromFormat('Y-m-d', $value);
     if ($dt_complete !== false && array_sum(DateTime::getLastErrors()) === 0) {
-        $tomorrow = new DateTime('+1 day');
-        if ($dt_complete < $tomorrow) {
+        $min_date = new DateTime('+' . $min_days . ' day');
+        if ($dt_complete < $min_date) {
             return "Увеличьте дату завершения торгов";
         }
     }
@@ -87,14 +87,12 @@ function is_date_valid($value) {
         }
 }
 // Валидация файла. Проверка расширения и MIME типа.
-function validateFile() {
-    if (!empty($_FILES['file_img']['name'])) {
-        $file_name = $_FILES['file_img']['name'];
+function validateFile($file_name, $tmp_name) {
+    if (!empty($file_name)) {
         $ext = pathinfo($file_name, PATHINFO_EXTENSION);
         $allowed = ['png', 'jpg', 'jpeg'];
 
         if (in_array($ext, $allowed)) {
-            $tmp_name = $_FILES['file_img']['tmp_name'];
             $file_type = mime_content_type($tmp_name);
 
             if ($file_type !== "image/jpeg" and $file_type !== "image/png") {
@@ -116,10 +114,9 @@ function validateEmail($value) {
     }
 }
 // Проверяет есть ли в бд пользователи с таким email.
-function validateRegEmail($con) {
-        $email = $con->real_escape_string($_POST['email']);
+function validateRegEmail($link, $email) {
         $sql = 'SELECT id FROM users WHERE email = ?';
-        $stmt = $con->prepare($sql);
+        $stmt = $link->prepare($sql);
         $stmt->bind_param('s', $email);
         $stmt->execute();
         $res = $stmt->get_result();

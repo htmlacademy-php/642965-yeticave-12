@@ -1,9 +1,9 @@
 <?php
 require __DIR__ . '/init.php'; //Файл инициализации приложения
+$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cat_id = array_column($categories, 'id');
-    $errors = [];
     $rules = [
         'lot-name' => function ($value) {
             return validateFilled($value);
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return validateStep($value);
         },
         'lot-date' => function ($value) {
-            return is_date_valid($value);
+            return dateCompleteValid($value, 1);
         },
     ];
 
@@ -35,16 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    $errors['file'] = validateFile();
+    $errors['file'] = validateFile($_FILES['file_img']['name'], $_FILES['file_img']['tmp_name']);
     $errors = array_filter($errors);
 
-    if (count($errors)) {
-        $page_content = include_template('add_lot.php', [
-            'categories' => $categories,
-            'errors' => $errors,
-        ]);
-    }
-    else {
+    if (!count($errors)) {
         move_uploaded_file($_FILES['file_img']['tmp_name'], 'uploads/' . $_FILES['file_img']['name']);
         $lot['path'] = 'uploads/' . $_FILES['file_img']['name'];
 
@@ -58,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die;
     }
 }
-else {
-    $page_content = include_template('add_lot.php', [
-        'categories' => $categories,
-    ]);
-}
+
+$page_content = include_template('add_lot.php', [
+    'categories' => $categories,
+    'errors' => $errors,
+]);
 
 $layout_content = include_template('layout.php', [
     'page_title' => 'Добавление лота',
