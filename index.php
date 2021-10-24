@@ -14,8 +14,6 @@ $page_content = include_template('index_main.php', [
 
 $layout_content = include_template('layout.php', [
     'page_title' => 'Аукцион горнолыжного оборудования',
-    'user_name' => 'Григорий',
-    'is_auth' => $is_auth,
     'page_content' => $page_content,
     'categories' => $categories,
 ]);
