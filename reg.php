@@ -28,17 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    if (empty($errors['email'])) {
-        $errors['email'] = validateRegEmail($con, $reg['email']);
-    }
-
+    $errors['email'] = $errors['email'] ?? validateRegEmail($connection, $reg['email']);
     $errors = array_filter($errors);
 
     if (!count($errors)) {
         $pass = password_hash($reg['password'], PASSWORD_DEFAULT);
 
-        $sql_reg = 'INSERT INTO users SET dt_registration = NOW(), email = ?, password = ?, first_name = ?, contacts = ?';
-        $stmt = $con->prepare($sql_reg);
+        $sql_reg = 'INSERT INTO users SET dt_create = NOW(), email = ?, password = ?, name = ?, contacts = ?';
+        $stmt = $connection->prepare($sql_reg);
         $stmt->bind_param('ssss', $reg['email'], $pass, $reg['name'], $reg['message']);
         $stmt->execute();
 

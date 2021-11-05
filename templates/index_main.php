@@ -5,7 +5,7 @@
         <ul class="promo__list">
             <?php foreach ($categories as $value): ?>
                 <li class="promo__item promo__item--<?= esc($value['symbol']) ?>">
-                    <a class="promo__link" href="pages/all-lots.html"><?= esc($value['name_cat']) ?></a>
+                    <a class="promo__link" href="index.php"><?= esc($value['cat_name']) ?></a>
                 </li>
             <?php endforeach ?>
         </ul>
@@ -23,9 +23,9 @@
                     <img src="<?= esc($value['image']) ?>" width="350" height="260" alt="">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category"><?= esc($value['name_cat']) ?></span>
+                    <span class="lot__category"><?= esc($value['cat_name']) ?></span>
                     <h3 class="lot__title">
-                        <a class="text-link" href="lot.php?id=<?= esc($value['id']) ?>"><?= esc($value['name_lot']) ?></a>
+                        <a class="text-link" href="lot.php?id=<?= esc($value['id']) ?>"><?= esc($value['lot_name']) ?></a>
                     </h3>
                     <div class="lot__state">
                         <div class="lot__rate">

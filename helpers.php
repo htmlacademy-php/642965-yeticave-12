@@ -122,12 +122,12 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
 
 /**
  * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
- * @param string $name Путь к файлу шаблона относительно папки templates
+ * @param string $name Путь к файлу шаблона относительно папки templates.php
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
 function include_template($name, array $data = []) {
-    $name = 'templates/' . $name;
+    $name = 'templates.php/' . $name;
     $result = '';
 
     if (!is_readable($name)) {
