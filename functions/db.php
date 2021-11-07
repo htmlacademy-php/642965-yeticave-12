@@ -51,8 +51,8 @@ function getLots(mysqli $link): array
  */
 function getLotID(mysqli $link, int $id): array
 {
-    $sql_lot = 'SELECT l.id, l.name AS lot_name, image, c.name AS cat_name, description, price_start, dt_complete, bid_step
-            FROM lots l JOIN categories c ON category_id = c.id WHERE l.id = ?';
+    $sql_lot = 'SELECT l.id, l.name AS lot_name, image, c.name AS cat_name, description, price_start, dt_complete, bid_step, u.name AS user_name
+            FROM lots l JOIN users u ON user_id = u.id JOIN categories c ON category_id = c.id WHERE l.id = ?';
 
     $stmt = $link->prepare($sql_lot);
     $stmt->bind_param('i', $id);
@@ -60,6 +60,27 @@ function getLotID(mysqli $link, int $id): array
     $result_lot = $stmt->get_result();
 
     return $result_lot->fetch_assoc();
+}
+
+/**
+ * Добавляет новый лот в БД
+ *
+ * @param mysqli $link ресурс соединения
+ * @param int $id идентификатор авторизованного пользователя
+ * @param string $name название лота
+ * @param int $cat_id идентификатор категории
+ * @param string $message описание лота
+ * @param int $rate начальная цена
+ * @param int $step шаг ставки
+ * @param string $date дата окончания торгов
+ * @param string $path путь к изображению лота
+ */
+function inLots(mysqli $link, int $id, string $name, int $cat_id, string $message, int $rate, int $step, string $date, string $path)
+{
+    $sql_ins_lot = 'INSERT INTO lots SET dt_create = NOW(), user_id = ?, name = ?, category_id = ?, description = ?, price_start = ?, bid_step = ?, dt_complete = ?, image = ?';
+    $stmt = $link->prepare($sql_ins_lot);
+    $stmt->bind_param('isisiiss', $id, $name, $cat_id, $message, $rate, $step, $date, $path);
+    $stmt->execute();
 }
 
 /**
@@ -84,7 +105,7 @@ function existUserByEmail(mysqli $link, string $email): bool
 }
 
 /**
- * Функция для регистрации пользователя
+ * Проверяет email для регистрации пользователя
  *
  * @param mysqli $link ресурс соединения с базой данных
  * @param string $email email для проверки
@@ -99,7 +120,24 @@ function validateRegEmail(mysqli $link, string $email): ?string
 }
 
 /**
- * Функция для аутентификации пользователя
+ * Добавляет данные пользователя в БД
+ *
+ * @param mysqli $link ресурс соединения
+ * @param string $email email пользователя
+ * @param string $pass 'хэш' пароля пользователя
+ * @param string $name имя пользователя
+ * @param string $message контактные данные
+ */
+function inUsers(mysqli $link, string $email, string $pass, string $name, string $message)
+{
+    $sql_reg = 'INSERT INTO users SET dt_create = NOW(), email = ?, password = ?, name = ?, contacts = ?';
+    $stmt = $link->prepare($sql_reg);
+    $stmt->bind_param('ssss', $email, $pass, $name, $message);
+    $stmt->execute();
+}
+
+/**
+ * Проверяет email для аутентификации пользователя
  *
  * @param mysqli $link ресурс соединения с базой данных
  * @param string $email email для проверки

@@ -15,7 +15,10 @@
                 <div class="lot-item__image">
                     <img src="<?= esc($lot_card['image']) ?>" width="730" height="548" alt="<?= esc($lot_card['lot_name']) ?>">
                 </div>
-                <p class="lot-item__category">Категория: <span><?= esc($lot_card['cat_name']) ?></span></p>
+                <p class="lot-item__category">
+                    <span>Автор лота: <?= esc($lot_card['user_name']) ?></span><br>
+                    <span>Категория: <?= esc($lot_card['cat_name']) ?></span>
+                </p>
                 <p class="lot-item__description"><?= esc($lot_card['description']) ?></p>
             </div>
             <div class="lot-item__right">

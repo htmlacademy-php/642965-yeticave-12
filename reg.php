@@ -34,10 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!count($errors)) {
         $pass = password_hash($reg['password'], PASSWORD_DEFAULT);
 
-        $sql_reg = 'INSERT INTO users SET dt_create = NOW(), email = ?, password = ?, name = ?, contacts = ?';
-        $stmt = $connection->prepare($sql_reg);
-        $stmt->bind_param('ssss', $reg['email'], $pass, $reg['name'], $reg['message']);
-        $stmt->execute();
+        //Добавляет в БД нового пользователя
+        inUsers($connection, $reg['email'], $pass, $reg['name'], $reg['message']);
 
         header('Location: login.php');
         die;
