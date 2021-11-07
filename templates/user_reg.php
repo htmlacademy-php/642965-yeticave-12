@@ -3,12 +3,12 @@
         <ul class="nav__list container">
             <?php foreach ($categories as $value): ?>
                 <li class="nav__item">
-                    <a href="all-lots.html"><?= esc($value['name_cat']) ?></a>
+                    <a href="index.php"><?= esc($value['cat_name']) ?></a>
                 </li>
             <?php endforeach ?>
         </ul>
     </nav>
-    <form class="form container <?php if (count($errors)): ?>form--invalid<?php endif ?>" action="reg.php" method="post" autocomplete="off">
+    <form class="form container <?php if (count($errors)): ?>form--invalid<?php endif ?>" action="<?= $_SERVER['SCRIPT_NAME'] ?>" method="post" autocomplete="off">
         <h2>Регистрация нового аккаунта</h2>
         <?php $classname = isset($errors['email']) ? "form__item--invalid" : ""; ?>
         <div class="form__item <?= $classname ?>">

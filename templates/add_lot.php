@@ -3,12 +3,12 @@
         <ul class="nav__list container">
             <?php foreach ($categories as $value): ?>
                 <li class="nav__item">
-                    <a href="all-lots.html"><?= esc($value['name_cat']) ?></a>
+                    <a href="index.php"><?= esc($value['cat_name']) ?></a>
                 </li>
             <?php endforeach ?>
         </ul>
     </nav>
-    <form class="form form--add-lot container <?php if (count($errors)): ?>form--invalid<?php endif ?>" action="add.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
+    <form class="form form--add-lot container <?php if (count($errors)): ?>form--invalid<?php endif ?>" action="<?= $_SERVER['SCRIPT_NAME'] ?>" method="post" enctype="multipart/form-data">
         <h2>Добавление лота</h2>
         <div class="form__container-two">
             <?php $classname = isset($errors['lot-name']) ? "form__item--invalid" : ""; ?>
@@ -23,7 +23,7 @@
                 <select id="category_id" name="category">
                     <option>Выбрать</option>
                     <?php foreach ($categories as $value): ?>
-                    <option value="<?= esc($value['id']) ?>"<?php if ($value['id'] == getPostVal('category')): ?> selected <?php endif; ?>><?= esc($value['name_cat']) ?></option>
+                    <option value="<?= esc($value['id']) ?>"<?php if ($value['id'] == getPostVal('category')): ?> selected <?php endif; ?>><?= esc($value['cat_name']) ?></option>
                     <?php endforeach ?>
                 </select>
                 <span class="form__error"><?= esc($errors['category'] ?? ""); ?></span>

@@ -1,4 +1,12 @@
 <?php
+session_start();
+
+if (empty($_SESSION)) {
+    header('location: reg.php');
+    setcookie('location','add.php',time()+3600);
+    die;
+}
+
 require __DIR__ . '/init.php'; //Файл инициализации приложения
 $errors = [];
 
@@ -42,12 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         move_uploaded_file($_FILES['file_img']['tmp_name'], 'uploads/' . $_FILES['file_img']['name']);
         $lot['path'] = 'uploads/' . $_FILES['file_img']['name'];
 
-        $sql_ins_lot = 'INSERT INTO lots SET dt_create = NOW(), user_id = 9, name_lot = ?, category_id = ?, description = ?, price_start = ?, bid_step = ?, dt_complete = ?, image = ?';
-        $stmt = $con->prepare($sql_ins_lot);
-        $stmt->bind_param('sisdiss', $lot['lot-name'], $lot['category'], $lot['message'], $lot['lot-rate'], $lot['lot-step'], $lot['lot-date'], $lot['path']);
-        $stmt->execute();
+        //Добавляет в БД новый лот
+        inLots($connection, $_SESSION['id'], $lot['lot-name'], $lot['category'], $lot['message'], $lot['lot-rate'], $lot['lot-step'], $lot['lot-date'], $lot['path']);
 
-        $lot_id = mysqli_insert_id($con);
+        $lot_id = mysqli_insert_id($connection);
         header('Location: lot.php?id=' . $lot_id);
         die;
     }
