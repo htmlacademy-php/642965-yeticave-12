@@ -2,11 +2,11 @@
 session_start();
 require __DIR__ . '/init.php'; //Файл инициализации приложения
 
-$product_card = getLots($connection);
+$lots = getLots($connection, $config['limit']);
 
 $page_content = include_template('index_main.php', [
     'categories' => $categories,
-    'product_card' => $product_card,
+    'lots' => $lots,
 ]);
 
 $layout_content = include_template('layout.php', [

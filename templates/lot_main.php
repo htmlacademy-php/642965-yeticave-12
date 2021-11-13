@@ -1,9 +1,9 @@
 <main>
     <nav class="nav">
         <ul class="nav__list container">
-            <?php foreach ($categories as $value): ?>
+            <?php foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="index.php"><?= esc($value['cat_name']) ?></a>
+                    <a href="index.php"><?= esc($category['cat_name']) ?></a>
                 </li>
             <?php endforeach ?>
         </ul>

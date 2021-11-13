@@ -4,7 +4,8 @@ CREATE DATABASE yeticave_new
 CREATE TABLE lots (
   id INT AUTO_INCREMENT PRIMARY KEY,
   dt_create DATETIME DEFAULT CURRENT_TIMESTAMP,
-  name VARCHAR(128) NOT NULL,  description VARCHAR(500),
+  name VARCHAR(128) NOT NULL,
+  description VARCHAR(500),
   image VARCHAR(128),
   price_start INT NOT NULL ,
   dt_complete DATETIME,
@@ -51,3 +52,5 @@ ALTER TABLE bids
 ALTER TABLE bids
   ADD FOREIGN KEY (user_id)
   REFERENCES users(id);
+
+CREATE FULLTEXT INDEX lots_search ON lots (name, description)

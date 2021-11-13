@@ -1,9 +1,9 @@
 <main>
     <nav class="nav">
         <ul class="nav__list container">
-            <?php foreach ($categories as $value): ?>
+            <?php foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="index.php"><?= esc($value['cat_name']) ?></a>
+                    <a href="index.php"><?= esc($category['cat_name']) ?></a>
                 </li>
             <?php endforeach ?>
         </ul>
@@ -22,8 +22,8 @@
                 <label for="category_id">Категория <sup>*</sup></label>
                 <select id="category_id" name="category">
                     <option>Выбрать</option>
-                    <?php foreach ($categories as $value): ?>
-                    <option value="<?= esc($value['id']) ?>"<?php if ($value['id'] == getPostVal('category')): ?> selected <?php endif; ?>><?= esc($value['cat_name']) ?></option>
+                    <?php foreach ($categories as $category): ?>
+                    <option value="<?= esc($category['id']) ?>"<?php if ($category['id'] == getPostVal('category')): ?> selected <?php endif; ?>><?= esc($category['cat_name']) ?></option>
                     <?php endforeach ?>
                 </select>
                 <span class="form__error"><?= esc($errors['category'] ?? ""); ?></span>

@@ -28,18 +28,65 @@ function getCategories(mysqli $link): array
 }
 
 /**
- * получает список лотов по которым торги еще не завершились.
+ * получает список лотов для главной страницы по которым торги еще не завершились.
  *
  * @param mysqli $link Ресурс соединения
+ * @param int $limit кол-во отображаемых лотов на странице
  * @return array результат в виде массива
  */
-function getLots(mysqli $link): array
+function getLots(mysqli $link, int $limit): array
 {
     $sql_lots = 'SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
-             FROM lots l, categories c WHERE category_id = c.id AND dt_complete > NOW() ORDER BY dt_create DESC';
+             FROM lots l, categories c WHERE category_id = c.id AND dt_complete > NOW() ORDER BY dt_create DESC LIMIT ?';
 
-    $result_lots = $link->query($sql_lots);
-    return $result_lots->fetch_all(MYSQLI_ASSOC);
+    $stmt = $link->prepare($sql_lots);
+    $stmt->bind_param('i', $limit);
+    $stmt->execute();
+    $res_lots = $stmt->get_result();
+
+    return $res_lots->fetch_all(MYSQLI_ASSOC);
+}
+
+/**
+ * получает колличество строк из таблицы согласно поисковому запросу
+ *
+ * @param mysqli $link ресурс соединения
+ * @param string $search поисковый запрос
+ * @return int возвращает колличество строк
+ */
+function getNumRows(mysqli $link, string $search): int
+{
+    $sql_lots = "SELECT name, description FROM lots WHERE dt_complete > NOW() AND MATCH(name, description) AGAINST (?)";
+
+    $stmt = $link->prepare($sql_lots);
+    $stmt->bind_param('s', $search);
+    $stmt->execute();
+    $res_lots = $stmt->get_result();
+
+    return $res_lots->num_rows;
+}
+
+/**
+ * получает список лотов согласно поисковому запросу
+ * и согласно параметрам для отображения на странице
+ *
+ * @param mysqli $link ресурс соединения
+ * @param string $search поисковый запрос
+ * @param int $limit кол-во отображаемых лотов на странице
+ * @param int $offset смещение
+ * @return array возвращает массив с данными
+ */
+function getSearchLots(mysqli $link, string $search, int $limit, int $offset): array
+{
+    $sql_lots = "SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
+             FROM lots l, categories c WHERE category_id = c.id AND dt_complete > NOW() AND MATCH(l.name, description) AGAINST (?) ORDER BY dt_create DESC LIMIT ? OFFSET ?";
+
+    $stmt = $link->prepare($sql_lots);
+    $stmt->bind_param('sii', $search, $limit, $offset);
+    $stmt->execute();
+    $res_lots = $stmt->get_result();
+
+    return $res_lots->fetch_all(MYSQLI_ASSOC);
 }
 
 /**
