@@ -11,12 +11,12 @@ if (isset($_GET['find']) || isset($_GET['page'])) {
     if (!empty($search_str)) {
         $items_count = getNumRows($connection, $search_str);
 
-        $offset = ($current_page - 1) * $config['page_limit'];
-        $lots = getSearchLots($connection, $search_str, $config['page_limit'],$offset);
+        $offset = ($current_page - 1) * $config['limit'];
+        $lots = getSearchLots($connection, $search_str, $config['limit'],$offset);
     }
 }
 
-$pages_count = ceil($items_count / $config['page_limit']);
+$pages_count = ceil($items_count / $config['limit']);
 $pages = range(1, $pages_count);
 
 $page_content = include_template('search_lot.php', [
