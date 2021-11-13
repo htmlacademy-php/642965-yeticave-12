@@ -62,12 +62,24 @@ function difference_date(string $future_date): array
 }
 
 /**
- * Функция для получения значений из POST-запроса
- * и подстановки их в шаблон
+ * Функция для получения значений из запроса и подстановки их в шаблон
  *
- * @param string $name имя поля
- * @return string возвращаемыйц результат
+ * @param string $name имя поля в запросе
+ * @return string возвращаемый либо значение поля либо ничего
  */
 function getPostVal(string $name): string {
-    return $_POST[$name] ?? "";
+    return $_REQUEST[$name] ?? "";
+}
+
+/**
+ * функция для отладки
+ * выводит в шаблон значения переменных
+ *
+ * @param mixed $data переменная, значение которой выведится в шаблон.
+ */
+function pr($data)
+{
+    echo '<pre>';
+    print_r($data);
+    echo '</pre>';
 }

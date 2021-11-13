@@ -122,3 +122,6 @@ ORDER BY u.name ASC;
 SELECT u.name, email, COUNT(l.id) lot_total
 FROM users u JOIN lots l ON u.id = l.user_id
 GROUP BY email ORDER BY lot_total DESC;
+
+# Поиск в таблице лот по полям название лота и описание
+SELECT * FROM lots WHERE MATCH(name, description) AGAINST ('лыжи палки');

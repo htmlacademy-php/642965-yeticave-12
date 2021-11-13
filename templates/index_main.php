@@ -33,7 +33,7 @@
                             <span class="lot__cost"><?= esc(price_format($value['price_start'])) ?></span>
                         </div>
                         <div class="lot__timer timer <?php if ($hours < 1): ?> timer--finishing <?php endif ?>">
-                        <?= esc($hours) ?>:<?= esc($minutes) ?>
+                            <?= esc($hours) ?>:<?= esc($minutes) ?>
                         </div>
                     </div>
                 </div>
