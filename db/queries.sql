@@ -18,14 +18,14 @@ SET email = 'tankist1982@ya.ru', name = 'Александр', password = '198219
 INSERT INTO users
 SET email = 'blacksea@mail.ru', name = 'Анастасия', password = 'blacksea', contacts = 'г.Сочи';
 
-INSERT INTO bids SET lot_id = '1', user_id = '6', price = '11300';
-INSERT INTO bids SET lot_id = '1', user_id = '5', price = '11600';
-INSERT INTO bids SET lot_id = '1', user_id = '4', price = '11900';
-INSERT INTO bids SET lot_id = '1', user_id = '3', price = '12200';
-INSERT INTO bids SET lot_id = '2', user_id = '5', price = '161000';
-INSERT INTO bids SET lot_id = '2', user_id = '6', price = '162000';
-INSERT INTO bids SET lot_id = '3', user_id = '5', price = '8200';
-INSERT INTO bids SET lot_id = '3', user_id = '6', price = '8400';
+INSERT INTO bets SET lot_id = '1', user_id = '6', price = '11300';
+INSERT INTO bets SET lot_id = '1', user_id = '5', price = '11600';
+INSERT INTO bets SET lot_id = '1', user_id = '4', price = '11900';
+INSERT INTO bets SET lot_id = '1', user_id = '3', price = '12200';
+INSERT INTO bets SET lot_id = '2', user_id = '5', price = '161000';
+INSERT INTO bets SET lot_id = '2', user_id = '6', price = '162000';
+INSERT INTO bets SET lot_id = '3', user_id = '5', price = '8200';
+INSERT INTO bets SET lot_id = '3', user_id = '6', price = '8400';
 
 INSERT INTO lots
 SET category_id = '1', user_id = '1',
@@ -89,29 +89,29 @@ UPDATE lots SET name = 'Куртка для сноуборда DC Mutiny Charoca
 
 # получить список ставок для лота по его идентификатору с сортировкой по дате.
 SELECT l.name, price, b.dt_create
-FROM bids b, lots l WHERE lot_id = l.id AND lot_id = 1
+FROM bets b, lots l WHERE lot_id = l.id AND lot_id = 1
 ORDER BY b.dt_create ASC;
 
 # тоже самое с использованием JOIN.
 SELECT l.name, price, b.dt_create
-FROM lots l JOIN bids b ON l.id = b.lot_id
+FROM lots l JOIN bets b ON l.id = b.lot_id
 WHERE lot_id = 1 ORDER BY b.dt_create ASC;
 
 # тоже самое + имя пользователя сделавшего ставку.
-SELECT l.name AS lot_name, price, u.name AS user_name, email, b.dt_create AS bid_date_create
-FROM lots l JOIN bids b ON l.id = b.lot_id
+SELECT l.name AS lot_name, price, u.name AS user_name, email, b.dt_create AS bet_date_create
+FROM lots l JOIN bets b ON l.id = b.lot_id
 JOIN users u ON b.user_id = u.id
 WHERE l.id = 1 ORDER BY b.dt_create ASC;
 
 # Список ставок пользователя по его email.
 SELECT u.name, email, price, l.name
-FROM bids b JOIN users u ON u.id = b.user_id
+FROM bets b JOIN users u ON u.id = b.user_id
 JOIN lots l ON l.id = b.lot_id  WHERE email = 'blacksea@mail.ru';
 
 # Покажет только тех пользователей, которые делали ставки и их колличество.
-SELECT u.name, email, COUNT(b.id) bids_total
-FROM users u JOIN bids b ON u.id = b.user_id
-GROUP BY email ORDER BY bids_total DESC;
+SELECT u.name, email, COUNT(b.id) bets_total
+FROM users u JOIN bets b ON u.id = b.user_id
+GROUP BY email ORDER BY bets_total DESC;
 
 # Список лотов пользователя
 SELECT u.name, email, l.name

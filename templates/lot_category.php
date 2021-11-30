@@ -2,7 +2,7 @@
     <nav class="nav">
         <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>
-            <li class="nav__item">
+            <li class="nav__item <?php if (getPostVal('cat_name') == $category['cat_name']): ?>nav__item--current<?php endif ?>">
                 <a href="lot_cat.php?cat_name=<?= esc($category['cat_name']) ?>"><?= esc($category['cat_name']) ?></a>
             </li>
         <?php endforeach ?>
@@ -10,15 +10,11 @@
     </nav>
     <div class="container">
         <section class="lots">
-            <?php if(!empty(getPostVal('search'))): ?>
-            <h2>Результаты поиска по запросу «<span><?= esc(getPostVal('search')) ?></span>»</h2>
-            <?php else: ?>
-            <h2>Вы ничего не ввели в строку поиска, введите запрос! </h2>
-            <?php endif ?>
+            <h2>Все лоты в категории <span>«<?= esc(getPostVal('cat_name')) ?>»</span></h2>
             <ul class="lots__list">
-                <?php foreach ($lots as $lot):
-                    list ($hours, $minutes) = difference_date($lot['dt_complete']);
-                ?>
+            <?php foreach ($lots as $lot):
+                list ($hours, $minutes) = difference_date($lot['dt_complete']);
+            ?>
                 <li class="lots__item lot">
                     <div class="lot__image">
                         <img src="<?= esc($lot['image']) ?>" width="350" height="260" alt="Сноуборд">
@@ -39,24 +35,21 @@
                         </div>
                     </div>
                 </li>
-                <?php endforeach ?>
-                <?php if(!empty(getPostVal('search')) && empty($lots)): ?>
-                <h3>По вашему запросу ничего не найдено, попробуйте еще раз! </h3>
-                <?php endif ?>
+            <?php endforeach ?>
             </ul>
         </section>
         <?php if ($pages_count > 1): ?>
         <ul class="pagination-list">
             <li class="pagination-item pagination-item-prev">
-                <a <?php if ($current_page > 1): ?>href="search.php?search=<?= esc(getPostVal('search')) ?>&page=<?= esc($current_page - 1) ?>"<?php endif ?>>Назад</a>
+                <a <?php if ($current_page > 1): ?>href="lot_cat.php?cat_name=<?= esc(getPostVal('cat_name')) ?>&page=<?= esc($current_page - 1) ?>"<?php endif ?>>Назад</a>
             </li>
             <?php foreach ($pages as $page): ?>
             <li class="pagination-item <?php if ($page == $current_page): ?>pagination-item-active<?php endif ?>">
-                <a href="search.php?search=<?= esc(getPostVal('search')) ?>&page=<?= $page ?>"><?= $page ?></a>
+                <a href="lot_cat.php?cat_name=<?= esc(getPostVal('cat_name')) ?>&page=<?= $page ?>"><?= $page ?></a>
             </li>
             <?php endforeach ?>
             <li class="pagination-item pagination-item-next">
-                <a <?php if ($current_page < $pages_count): ?>href="search.php?search=<?= esc(getPostVal('search')) ?>&page=<?= esc($current_page + 1) ?>"<?php endif ?>>Вперед</a>
+                <a <?php if ($current_page < $pages_count): ?>href="lot_cat.php?cat_name=<?= esc(getPostVal('cat_name')) ?>&page=<?= esc($current_page + 1) ?>"<?php endif ?>>Вперед</a>
             </li>
         </ul>
         <?php endif ?>

@@ -19,7 +19,7 @@ CREATE TABLE categories (
   name VARCHAR(64) NOT NULL,
   symbol VARCHAR(64) NOT NULL
 );
-CREATE TABLE bids (
+CREATE TABLE bets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   dt_create DATETIME DEFAULT CURRENT_TIMESTAMP,
   price INT NOT NULL,
@@ -45,11 +45,11 @@ ALTER TABLE lots
   ADD FOREIGN KEY (category_id)
   REFERENCES categories(id);
 
-ALTER TABLE bids
+ALTER TABLE bets
   ADD FOREIGN KEY (lot_id)
   REFERENCES lots(id);
 
-ALTER TABLE bids
+ALTER TABLE bets
   ADD FOREIGN KEY (user_id)
   REFERENCES users(id);
 

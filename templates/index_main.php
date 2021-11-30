@@ -5,7 +5,7 @@
         <ul class="promo__list">
             <?php foreach ($categories as $category): ?>
                 <li class="promo__item promo__item--<?= esc($category['symbol']) ?>">
-                    <a class="promo__link" href="index.php"><?= esc($category['cat_name']) ?></a>
+                    <a class="promo__link" href="lot_cat.php?cat_name=<?= esc($category['cat_name']) ?>"><?= esc($category['cat_name']) ?></a>
                 </li>
             <?php endforeach ?>
         </ul>
@@ -16,7 +16,7 @@
         </div>
         <ul class="lots__list">
             <?php foreach ($lots as $lot):
-                list ($hours, $minutes) = difference_date($lot['dt_complete']);
+                  list ($hours, $minutes) = difference_date($lot['dt_complete']);
             ?>
             <li class="lots__item lot">
                 <div class="lot__image">
