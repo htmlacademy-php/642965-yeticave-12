@@ -9,7 +9,7 @@ $current_page = (is_numeric($current_page) && $current_page > 0) ? $current_page
 
 if ($_GET['cat_name']) {
     $cat_name = filter_input(INPUT_GET, 'cat_name', FILTER_SANITIZE_SPECIAL_CHARS);
-    $items_count = numRows_lotsCategory($connection, $cat_name);
+    $items_count = numRowsLotsCategory($connection, $cat_name);
 
     $offset = ($current_page - 1) * $config['limit'];
     $lots = getLotsCategory($connection, $cat_name, $config['limit'], $offset);

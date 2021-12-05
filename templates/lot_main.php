@@ -37,7 +37,6 @@
                         </div>
                     </div>
                     <?php if (isset($_SESSION['name']) && ($_SESSION['id'] != $lot_card['user_id']) && ($hours > 0)):
-                          if ($current_price != getPostVal('cost')):
                           if ($_SESSION['id'] != ($bets['0']['user_id'] ?? '0')):
                     ?>
                     <form class="lot-item__form" action="lot.php?id=<?= $lot_card['id'] ?>&success=true" method="post" autocomplete="off">
@@ -48,7 +47,6 @@
                         </p>
                         <button type="submit" class="button">Сделать</button>
                     </form>
-                    <?php endif ?>
                     <?php endif ?>
                     <?php endif ?>
                 </div>

@@ -21,10 +21,10 @@ function dbConnect(array $db_data): mysqli
  */
 function getCategories(mysqli $link): array
 {
-    $sql_categories = 'SELECT id, name AS cat_name, symbol FROM categories';
-    $result_categories = $link->query($sql_categories);
+    $sql = 'SELECT id, name AS cat_name, symbol FROM categories';
+    $result = $link->query($sql);
 
-    return $result_categories->fetch_all(MYSQLI_ASSOC);
+    return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 /**
@@ -36,15 +36,15 @@ function getCategories(mysqli $link): array
  */
 function getLots(mysqli $link, int $limit): array
 {
-    $sql_lots = "SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
+    $sql = "SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
                  FROM lots l, categories c WHERE category_id = c.id AND dt_complete > NOW() ORDER BY dt_create DESC LIMIT ?";
 
-    $stmt = $link->prepare($sql_lots);
+    $stmt = $link->prepare($sql);
     $stmt->bind_param('i', $limit);
     $stmt->execute();
-    $res_lots = $stmt->get_result();
+    $result = $stmt->get_result();
 
-    return $res_lots->fetch_all(MYSQLI_ASSOC);
+    return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 /**
@@ -54,16 +54,16 @@ function getLots(mysqli $link, int $limit): array
  * @param string $search поисковый запрос
  * @return int возвращает колличество строк
  */
-function numRows_searchLots(mysqli $link, string $search): int
+function numRowsSearchLots(mysqli $link, string $search): int
 {
-    $sql_lots = "SELECT name, description FROM lots WHERE dt_complete > NOW() AND MATCH(name, description) AGAINST (?)";
+    $sql = "SELECT name, description FROM lots WHERE dt_complete > NOW() AND MATCH(name, description) AGAINST (?)";
 
-    $stmt = $link->prepare($sql_lots);
+    $stmt = $link->prepare($sql);
     $stmt->bind_param('s', $search);
     $stmt->execute();
-    $res_lots = $stmt->get_result();
+    $result = $stmt->get_result();
 
-    return $res_lots->num_rows;
+    return $result->num_rows;
 }
 
 /**
@@ -78,15 +78,15 @@ function numRows_searchLots(mysqli $link, string $search): int
  */
 function getSearchLots(mysqli $link, string $search, int $limit, int $offset): array
 {
-    $sql_lots = "SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
+    $sql = "SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
                  FROM lots l, categories c WHERE category_id = c.id AND MATCH(l.name, description) AGAINST (?) ORDER BY dt_create DESC LIMIT ? OFFSET ?";
 
-    $stmt = $link->prepare($sql_lots);
+    $stmt = $link->prepare($sql);
     $stmt->bind_param('sii', $search, $limit, $offset);
     $stmt->execute();
-    $res_lots = $stmt->get_result();
+    $result= $stmt->get_result();
 
-    return $res_lots->fetch_all(MYSQLI_ASSOC);
+    return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 /**
@@ -98,15 +98,15 @@ function getSearchLots(mysqli $link, string $search, int $limit, int $offset): a
  */
 function getLotID(mysqli $link, int $id): ?array
 {
-    $sql_lot = "SELECT l.id, l.name AS lot_name, image, c.name AS cat_name, description, price_start, dt_complete, bid_step, u.name AS user_name, user_id
+    $sql = "SELECT l.id, l.name AS lot_name, image, c.name AS cat_name, description, price_start, dt_complete, bid_step, u.name AS user_name, user_id
                 FROM lots l JOIN users u ON user_id = u.id JOIN categories c ON category_id = c.id WHERE l.id = ?";
 
-    $stmt = $link->prepare($sql_lot);
+    $stmt = $link->prepare($sql);
     $stmt->bind_param('i', $id);
     $stmt->execute();
-    $result_lot = $stmt->get_result();
+    $result = $stmt->get_result();
 
-    return $result_lot->fetch_assoc();
+    return $result->fetch_assoc();
 }
 
 /**
@@ -116,15 +116,15 @@ function getLotID(mysqli $link, int $id): ?array
  * @param string $category категория для сортировки
  * @return int возвращает колличество строк
  */
-function numRows_lotsCategory(mysqli $link, string $category): int
+function numRowsLotsCategory(mysqli $link, string $category): int
 {
-    $sql_lot = "SELECT l.id, l.name FROM lots l, categories c WHERE l.category_id = c.id AND c.name = ?";
-    $stmt = $link->prepare($sql_lot);
+    $sql = "SELECT l.id, l.name FROM lots l, categories c WHERE l.category_id = c.id AND c.name = ?";
+    $stmt = $link->prepare($sql);
     $stmt->bind_param('s', $category);
     $stmt->execute();
-    $result_lot = $stmt->get_result();
+    $result = $stmt->get_result();
 
-    return $result_lot->num_rows;
+    return $result->num_rows;
 }
 
 /**
@@ -138,15 +138,15 @@ function numRows_lotsCategory(mysqli $link, string $category): int
  */
 function getLotsCategory(mysqli $link, string $category, int $limit, int $offset): array
 {
-    $sql_lot = "SELECT l.id, l.name AS lot_name, image, c.name AS cat_name, price_start, dt_complete
+    $sql = "SELECT l.id, l.name AS lot_name, image, c.name AS cat_name, price_start, dt_complete
                 FROM lots l, categories c WHERE category_id = c.id AND c.name = ? ORDER BY dt_create DESC LIMIT ? OFFSET ?";
 
-    $stmt = $link->prepare($sql_lot);
+    $stmt = $link->prepare($sql);
     $stmt->bind_param('sii', $category, $limit, $offset);
     $stmt->execute();
-    $result_lot = $stmt->get_result();
+    $result = $stmt->get_result();
 
-    return $result_lot->fetch_all(MYSQLI_ASSOC);
+    return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 /**
@@ -217,8 +217,8 @@ function validateRegEmail(mysqli $link, string $email): ?string
  */
 function inUsers(mysqli $link, string $email, string $pass, string $name, string $message)
 {
-    $sql_reg = 'INSERT INTO users SET dt_create = NOW(), email = ?, password = ?, name = ?, contacts = ?';
-    $stmt = $link->prepare($sql_reg);
+    $sql = 'INSERT INTO users SET dt_create = NOW(), email = ?, password = ?, name = ?, contacts = ?';
+    $stmt = $link->prepare($sql);
     $stmt->bind_param('ssss', $email, $pass, $name, $message);
     $stmt->execute();
 }
@@ -263,14 +263,14 @@ function validateLogEmail(mysqli $link, string $email): ?string
  */
 function userPassword(mysqli $link, string $email): string
 {
-    $sql_pass = 'SELECT password FROM users WHERE email=?';
-    $stmt = $link->prepare($sql_pass);
+    $sql = 'SELECT password FROM users WHERE email=?';
+    $stmt = $link->prepare($sql);
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $result = $stmt->get_result();
-    $db_pass = $result->fetch_assoc();
+    $pass = $result->fetch_assoc();
 
-    return $db_pass['password'];
+    return $pass['password'];
 }
 
 /**
@@ -286,9 +286,9 @@ function UserID(mysqli $link, string $email): array
     $stmt = $link->prepare($sql);
     $stmt->bind_param('s', $email);
     $stmt->execute();
-    $res = $stmt->get_result();
+    $result = $stmt->get_result();
 
-    return $res->fetch_assoc();
+    return $result->fetch_assoc();
 }
 
 /**
@@ -303,9 +303,9 @@ function getLotBets(mysqli $link, int $id): array
     $stmt = $link->prepare($sql);
     $stmt->bind_param('i', $id);
     $stmt->execute();
-    $res = $stmt->get_result();
+    $result = $stmt->get_result();
 
-    return $res->fetch_all(MYSQLI_ASSOC);
+    return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 /**
@@ -322,7 +322,7 @@ function getMyBets(mysqli $link, int $user_id): array
     $stmt = $link->prepare($sql);
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
-    $res = $stmt->get_result();
+    $result = $stmt->get_result();
 
-    return $res->fetch_all(MYSQLI_ASSOC);
+    return $result->fetch_all(MYSQLI_ASSOC);
 }

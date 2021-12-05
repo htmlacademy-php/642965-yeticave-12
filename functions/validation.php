@@ -90,8 +90,8 @@ function validateStep(string $cost, int $price, int $bid_step): ?string
         return "Введите целое положительное число";
     }
     if ($cost < ($price + $bid_step)) {
-        $new_price = $price + $bid_step;
-        return "Значение должно быть больше или равно: $new_price";
+        $newPrice = $price + $bid_step;
+        return "Значение должно быть больше или равно: $newPrice";
     }
     return null;
 }

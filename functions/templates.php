@@ -49,7 +49,6 @@ function esc(string $str): string
  */
 function difference_date(string $future_date): array
 {
-    date_default_timezone_set("Europe/Moscow");
     $time_expires_sec = strtotime($future_date) - time();
 
     $hours = floor($time_expires_sec / 3600); //Колличество часов до нужного события
@@ -117,7 +116,6 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
  */
 function pastDate(string $date): string
 {
-    date_default_timezone_set("Europe/Moscow");
     $time = time() - strtotime($date);
 
     $hours = floor($time / 3600); //Колличество часов до нужного события

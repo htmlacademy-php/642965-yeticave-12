@@ -11,7 +11,7 @@ if (isset($_GET['find']) || isset($_GET['page'])) {
     $items_count = 0;
 
     if (!empty($search_str)) {
-        $items_count = numRows_searchLots($connection, $search_str);
+        $items_count = numRowsSearchLots($connection, $search_str);
 
         $offset = ($current_page - 1) * $config['limit'];
         $lots = getSearchLots($connection, $search_str, $config['limit'],$offset);
