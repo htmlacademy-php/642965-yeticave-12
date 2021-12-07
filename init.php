@@ -19,3 +19,5 @@ $connection = dbConnect($config['db']);
 
 // Получение списка категорий, общий запрос для всех страниц
 $categories = getCategories($connection);
+
+date_default_timezone_set($config['time_zone']);

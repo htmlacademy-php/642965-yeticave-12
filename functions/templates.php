@@ -44,12 +44,11 @@ function esc(string $str): string
 /**
  * Функция возвращает разницу во времени между будущим и настоящим [часы, минуты]
  *
- * @param string $future_date
+ * @param string $future_date строка с датой
  * @return array возвращает массив с остатком времени в виде [часы, минуты]
  */
 function difference_date(string $future_date): array
 {
-    date_default_timezone_set("Europe/Moscow");
     $time_expires_sec = strtotime($future_date) - time();
 
     $hours = floor($time_expires_sec / 3600); //Колличество часов до нужного события
@@ -59,6 +58,78 @@ function difference_date(string $future_date): array
     $minutes = ($minutes < 0) ? "00" : str_pad($minutes, 2, "0", STR_PAD_LEFT);
 
     return [$hours, $minutes];
+}
+
+/**
+ * Возвращает корректную форму множественного числа
+ * Ограничения: только для целых чисел
+ *
+ * Пример использования:
+ * $remaining_minutes = 5;
+ * echo "Я поставил таймер на {$remaining_minutes} " .
+ *     get_noun_plural_form(
+ *         $remaining_minutes,
+ *         'минута',
+ *         'минуты',
+ *         'минут'
+ *     );
+ * Результат: "Я поставил таймер на 5 минут"
+ *
+ * @param int $number Число, по которому вычисляем форму множественного числа
+ * @param string $one Форма единственного числа: яблоко, час, минута
+ * @param string $two Форма множественного числа для 2, 3, 4: яблока, часа, минуты
+ * @param string $many Форма множественного числа для остальных чисел
+ *
+ * @return string Рассчитанная форма множественнго числа
+ */
+function get_noun_plural_form (int $number, string $one, string $two, string $many): string
+{
+    $number = (int) $number;
+    $mod10 = $number % 10;
+    $mod100 = $number % 100;
+
+    switch (true) {
+        case ($mod100 >= 11 && $mod100 <= 20):
+            return $many;
+
+        case ($mod10 > 5):
+            return $many;
+
+        case ($mod10 === 1):
+            return $one;
+
+        case ($mod10 >= 2 && $mod10 <= 4):
+            return $two;
+
+        default:
+            return $many;
+    }
+}
+
+/**
+ * из настоящего времени вычитает дату от прошедшего события
+ * полученное время разбивает на часы и минуты
+ * в зависимости от условия выводит дату в человеческом формате
+ *
+ * @param string $date строка с датой
+ * @return string возвращает отформатированную строку с датой
+ */
+function pastDate(string $date): string
+{
+    $time = time() - strtotime($date);
+
+    $hours = floor($time / 3600); //Колличество часов до нужного события
+    $minutes = floor(($time % 3600) / 60); //Колличество минут до нужного события
+
+    if ($hours < 1) {
+        return $minutes. ' ' .get_noun_plural_form($minutes, 'минута', 'минуты', 'минут'). ' ' .'назад';
+    }
+    if (($hours >= 1) && ($hours < 24)) {
+        return $hours. ' ' .get_noun_plural_form($hours, 'час', 'часа', 'часов'). ' ' .'назад';
+    }
+
+    $past_date = date_create($date);
+    return date_format($past_date, 'd.m.y в H:i');
 }
 
 /**
@@ -82,4 +153,37 @@ function pr($data)
     echo '<pre>';
     print_r($data);
     echo '</pre>';
+}
+
+/**
+ * подставляет в шаблон строку с названием класса.
+ * @param string $hours строка содержащая время (час)
+ * @param string $minutes строка содержащая время (минуты)
+ * @return string возвращает либо строку с названием класса либо пустую
+ */
+function timerClass(string $hours, string $minutes): string
+{
+    if (($hours < 1) && ($minutes > 0)) {
+        return "timer--finishing";
+    }
+    if (($hours == 0) && ($minutes == 0)) {
+        return "timer--end";
+    }
+
+    return "";
+}
+
+/**
+ * подставляет в шаблон либо строку с сообщением либо со временем.
+ * @param string $hours строка содержащая время (час)
+ * @param string $minutes строка содержащая время (минуты)
+ * @return string возвращает строку с сообщением либо время hh:mm
+ */
+function timerResult(string $hours, string $minutes): string
+{
+    if (($hours == 0) && ($minutes == 0)) {
+        return "Торги окончены";
+    }
+
+    return "$hours:$minutes";
 }

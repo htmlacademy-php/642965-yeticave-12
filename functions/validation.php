@@ -67,10 +67,31 @@ function validateRate(string $value): ?string
  * @param string $value проверяемое значение
  * @return string|null возвращает строку с ошибкой или ничего
  */
-function validateStep(string $value): ?string
+function validateBidStep(string $value): ?string
 {
     if (!ctype_digit($value) || $value <= 0) {
         return "Введите целое число больше 0";
+    }
+    return null;
+}
+
+/**
+ * Проверяет число (ставку) на заданные условия
+ * число должно быть целым и положительным
+ * число должно быть больше или равно предыдущей цене плюс шаг ставки
+ * @param string $cost число (ставка), которая проверяется
+ * @param int $price текущая цена
+ * @param int $bid_step шаг ставки
+ * @return string|null возвращает либо строку с ошибкой либо ничего.
+ */
+function validateStep(string $cost, int $price, int $bid_step): ?string
+{
+    if (!ctype_digit($cost) || $cost <= 0) {
+        return "Введите целое положительное число";
+    }
+    if ($cost < ($price + $bid_step)) {
+        $newPrice = $price + $bid_step;
+        return "Значение должно быть больше или равно: $newPrice";
     }
     return null;
 }

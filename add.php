@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return validateRate($value);
         },
         'lot-step' => function ($value) {
-            return validateStep($value);
+            return validateBidStep($value);
         },
         'lot-date' => function ($value) {
             return dateCompleteValid($value, 1);

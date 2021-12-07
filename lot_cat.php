@@ -1,33 +1,30 @@
 <?php
 session_start();
-require __DIR__ . '/init.php'; //Файл инициализации приложения
+require __DIR__ . '/init.php';
+$items_count = 0;
 $lots = [];
 
 $current_page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
 $current_page = (is_numeric($current_page) && $current_page > 0) ? $current_page : 1;
 
-if (isset($_GET['find']) || isset($_GET['page'])) {
-    $search_str = trim(filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS));
-    $items_count = 0;
+if ($_GET['cat_name']) {
+    $cat_name = filter_input(INPUT_GET, 'cat_name', FILTER_SANITIZE_SPECIAL_CHARS);
+    $items_count = numRowsLotsCategory($connection, $cat_name);
 
-    if (!empty($search_str)) {
-        $items_count = numRowsSearchLots($connection, $search_str);
-
-        $offset = ($current_page - 1) * $config['limit'];
-        $lots = getSearchLots($connection, $search_str, $config['limit'],$offset);
-    }
+    $offset = ($current_page - 1) * $config['limit'];
+    $lots = getLotsCategory($connection, $cat_name, $config['limit'], $offset);
 }
 
 $pages_count = ceil($items_count / $config['limit']);
 $pages = range(1, $pages_count);
 
-$page_content = include_template('search_lot.php', [
+$page_content = include_template('lot_category.php', [
     'categories' => $categories,
     'lots' => $lots,
     'current_page' => $current_page,
     'pages_count' => $pages_count,
     'pages' => $pages,
-    ]);
+]);
 
 $layout_content = include_template('layout.php', [
     'page_title' => 'Результат поиска',
@@ -36,3 +33,4 @@ $layout_content = include_template('layout.php', [
 ]);
 
 echo $layout_content;
+
