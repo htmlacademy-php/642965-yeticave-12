@@ -1,6 +1,5 @@
 <?php
 require __DIR__ . '/init.php'; //Файл инициализации приложения
-$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $rules = [
@@ -14,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return validateFilled($value);
         },
         'message' => function ($value) {
-            return isCorrectLength($value, 20, 200);
+            return validateFilled($value);
         },
     ];
 
@@ -42,15 +41,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$page_content = include_template('user_reg.php', [
+$pageContent = includeTemplate('user_reg.php', [
     'categories' => $categories,
     'errors' => $errors,
 ]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => 'Регистрация пользователя',
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => 'Регистрация пользователя',
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;

@@ -16,7 +16,7 @@
         </div>
         <ul class="lots__list">
             <?php foreach ($lots as $lot):
-                  list ($hours, $minutes) = difference_date($lot['dt_complete']);
+                  list ($hours, $minutes) = differenceDate($lot['dt_complete']);
             ?>
             <li class="lots__item lot">
                 <div class="lot__image">
@@ -30,7 +30,7 @@
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?= esc(price_format($lot['price_start'])) ?></span>
+                            <span class="lot__cost"><?= esc(priceFormat($lot['price_start'])) ?></span>
                         </div>
                         <div class="lot__timer timer <?php if ($hours < 1): ?> timer--finishing <?php endif ?>">
                             <?= esc($hours) ?>:<?= esc($minutes) ?>

@@ -21,7 +21,7 @@ if (isset($_GET['find']) || isset($_GET['page'])) {
 $pages_count = ceil($items_count / $config['limit']);
 $pages = range(1, $pages_count);
 
-$page_content = include_template('search_lot.php', [
+$pageContent = includeTemplate('search_lot.php', [
     'categories' => $categories,
     'lots' => $lots,
     'current_page' => $current_page,
@@ -29,10 +29,10 @@ $page_content = include_template('search_lot.php', [
     'pages' => $pages,
     ]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => 'Результат поиска',
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => 'Результат поиска',
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;

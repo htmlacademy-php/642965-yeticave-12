@@ -6,7 +6,7 @@
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template(string $name, array $data = []): string
+function includeTemplate(string $name, array $data = []): string
 {
     $name = __DIR__ . '/../templates/' . $name;
 
@@ -23,10 +23,10 @@ function include_template(string $name, array $data = []): string
  * @param float $price цена в виде десятичного числа
  * @return string отформатированная, округленная цена со знаком рубля.
  */
-function price_format(float $price): string
+function priceFormat(float $price): string
 {
     $price = ceil($price);
-    $price = number_format($price,0,'',' ') . " ₽";
+    $price = number_format($price, 0, '', ' ') . " ₽";
     return $price;
 }
 
@@ -47,12 +47,12 @@ function esc(string $str): string
  * @param string $future_date строка с датой
  * @return array возвращает массив с остатком времени в виде [часы, минуты]
  */
-function difference_date(string $future_date): array
+function differenceDate(string $future_date): array
 {
-    $time_expires_sec = strtotime($future_date) - time();
+    $timeExpiresSec = strtotime($future_date) - time();
 
-    $hours = floor($time_expires_sec / 3600); //Колличество часов до нужного события
-    $minutes = floor(($time_expires_sec % 3600) / 60); //Колличество минут до нужного события
+    $hours = floor($timeExpiresSec / 3600); //Колличество часов до нужного события
+    $minutes = floor(($timeExpiresSec % 3600) / 60); //Колличество минут до нужного события
 
     $hours = ($hours < 0) ? "00" : str_pad($hours, 2, "0", STR_PAD_LEFT);
     $minutes = ($minutes < 0) ? "00" : str_pad($minutes, 2, "0", STR_PAD_LEFT);
@@ -67,7 +67,7 @@ function difference_date(string $future_date): array
  * Пример использования:
  * $remaining_minutes = 5;
  * echo "Я поставил таймер на {$remaining_minutes} " .
- *     get_noun_plural_form(
+ *     getNounPluralForm(
  *         $remaining_minutes,
  *         'минута',
  *         'минуты',
@@ -82,9 +82,9 @@ function difference_date(string $future_date): array
  *
  * @return string Рассчитанная форма множественнго числа
  */
-function get_noun_plural_form (int $number, string $one, string $two, string $many): string
+function getNounPluralForm(int $number, string $one, string $two, string $many): string
 {
-    $number = (int) $number;
+    $number = (int)$number;
     $mod10 = $number % 10;
     $mod100 = $number % 100;
 
@@ -122,10 +122,10 @@ function pastDate(string $date): string
     $minutes = floor(($time % 3600) / 60); //Колличество минут до нужного события
 
     if ($hours < 1) {
-        return $minutes. ' ' .get_noun_plural_form($minutes, 'минута', 'минуты', 'минут'). ' ' .'назад';
+        return $minutes . ' ' . getNounPluralForm($minutes, 'минута', 'минуты', 'минут') . ' ' . 'назад';
     }
     if (($hours >= 1) && ($hours < 24)) {
-        return $hours. ' ' .get_noun_plural_form($hours, 'час', 'часа', 'часов'). ' ' .'назад';
+        return $hours . ' ' . getNounPluralForm($hours, 'час', 'часа', 'часов') . ' ' . 'назад';
     }
 
     $past_date = date_create($date);
@@ -138,8 +138,26 @@ function pastDate(string $date): string
  * @param string $name имя поля в запросе
  * @return string возвращаемый либо значение поля либо ничего
  */
-function getPostVal(string $name): string {
+function getPostVal(string $name): string
+{
     return $_REQUEST[$name] ?? "";
+}
+
+/**
+ * Если пользователь авторизован, присваивает переменой значение его Id
+ * Если не авторизован, переадрессовывает на страницу входа.
+ * @return int|null возвращает значение Id пользователя.
+ */
+function getUserIdFromSession(): ?int
+{
+    $userId = $_SESSION['id'] ?? null;
+
+    if (empty($userId)) {
+        header('location: login.php');
+        die;
+    }
+
+    return $userId;
 }
 
 /**

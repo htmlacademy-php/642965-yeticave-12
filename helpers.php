@@ -81,7 +81,7 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
  * Пример использования:
  * $remaining_minutes = 5;
  * echo "Я поставил таймер на {$remaining_minutes} " .
- *     get_noun_plural_form(
+ *     getNounPluralForm(
  *         $remaining_minutes,
  *         'минута',
  *         'минуты',
@@ -96,7 +96,7 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
  *
  * @return string Рассчитанная форма множественнго числа
  */
-function get_noun_plural_form (int $number, string $one, string $two, string $many): string
+function getNounPluralForm (int $number, string $one, string $two, string $many): string
 {
     $number = (int) $number;
     $mod10 = $number % 10;
@@ -126,7 +126,7 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template($name, array $data = []) {
+function includeTemplate($name, array $data = []) {
     $name = 'templates.php/' . $name;
     $result = '';
 

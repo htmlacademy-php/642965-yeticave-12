@@ -18,7 +18,7 @@ if ($_GET['cat_name']) {
 $pages_count = ceil($items_count / $config['limit']);
 $pages = range(1, $pages_count);
 
-$page_content = include_template('lot_category.php', [
+$pageContent = includeTemplate('lot_category.php', [
     'categories' => $categories,
     'lots' => $lots,
     'current_page' => $current_page,
@@ -26,11 +26,11 @@ $page_content = include_template('lot_category.php', [
     'pages' => $pages,
 ]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => 'Результат поиска',
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => 'Результат поиска',
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;
 

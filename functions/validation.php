@@ -81,16 +81,16 @@ function validateBidStep(string $value): ?string
  * число должно быть больше или равно предыдущей цене плюс шаг ставки
  * @param string $cost число (ставка), которая проверяется
  * @param int $price текущая цена
- * @param int $bid_step шаг ставки
+ * @param int $bidStep шаг ставки
  * @return string|null возвращает либо строку с ошибкой либо ничего.
  */
-function validateStep(string $cost, int $price, int $bid_step): ?string
+function validateStep(string $cost, int $price, int $bidStep): ?string
 {
     if (!ctype_digit($cost) || $cost <= 0) {
         return "Введите целое положительное число";
     }
-    if ($cost < ($price + $bid_step)) {
-        $newPrice = $price + $bid_step;
+    if ($cost < ($price + $bidStep)) {
+        $newPrice = $price + $bidStep;
         return "Значение должно быть больше или равно: $newPrice";
     }
     return null;
@@ -101,52 +101,49 @@ function validateStep(string $cost, int $price, int $bid_step): ?string
  * Дата окончания лота должна быть больше текущей хотя бы на 1 сутки
  *
  * @param string $value дата в виде строки
- * @param int $min_days Колличество дней прибавляемое к текущей дате
+ * @param int $minDays Колличество дней прибавляемое к текущей дате
  * @return string сравнивает дату окончания с (текущей датой + $min_days) и возвращает строку с сообщением об ошибке
  */
-function dateCompleteValid(string $value, int $min_days): ?string
+function dateCompleteValid(string $value, int $minDays): ?string
 {
-    $dt_complete = DateTime::createFromFormat('Y-m-d', $value);
-    if ($dt_complete !== false && array_sum(DateTime::getLastErrors()) === 0) {
-        $min_date = new DateTime('+' . $min_days . ' day');
-        if ($dt_complete < $min_date) {
-            return "Увеличьте дату завершения торгов";
-        }
-        return null;
-    }
-    else {
+    $dtComplete = DateTime::createFromFormat('Y-m-d', $value);
+    if ($dtComplete == false || array_sum(DateTime::getLastErrors()) !== 0) {
         return "Введите дату в правильном формате";
     }
+
+    $minDate = new DateTime('+' . $minDays . ' day');
+    if ($dtComplete < $minDate) {
+        return "Увеличьте дату завершения торгов";
+    }
+
+    return null;
 }
 
 /**
  * Проверяет расширение файла и MIME тип согласно заданным условиям
  *
- * @param string $file_name имя файла для сравнения расширения
- * @param string $tmp_name 'tmp' - имя файла для сравнения MIME типа
+ * @param string $fileName имя файла для сравнения расширения
+ * @param string $tmpName 'tmp' - имя файла для сравнения MIME типа
  * @return string в зависимости от проверки возвращает строку с сообщением об ошибке
  */
-function validateFile(string $file_name, string $tmp_name): ?string
+function validateFile(string $fileName, string $tmpName): ?string
 {
-    if (!empty($file_name)) {
-        $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-        $allowed = ['png', 'jpg', 'jpeg'];
-
-        if (in_array($ext, $allowed)) {
-            $file_type = mime_content_type($tmp_name);
-
-            if ($file_type !== "image/jpeg" and $file_type !== "image/png") {
-                return 'Неверный тип файла!';
-            }
-            return null;
-        }
-        else {
-            return 'Загрузите картинку с расширением JPEG или PNG';
-        }
-    }
-    else {
+    if (empty($fileName)) {
         return 'Вы не загрузили файл изображения';
     }
+
+    $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+    $allowed = ['png', 'jpg', 'jpeg'];
+    if (!in_array($ext, $allowed)) {
+        return 'Загрузите картинку с расширением JPEG или PNG';
+    }
+
+    $fileType = mime_content_type($tmpName);
+    if ($fileType !== "image/jpeg" and $fileType !== "image/png") {
+        return 'Неверный тип файла!';
+    }
+
+    return null;
 }
 
 /**

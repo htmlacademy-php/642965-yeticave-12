@@ -1,18 +1,18 @@
 <?php
-session_start();
 require __DIR__ . '/init.php'; //Файл инициализации приложения
 
-$my_bets = getMyBets($connection, $_SESSION['id']);
+$userId = getUserIdFromSession();
+$myBets = getMyBets($connection, $userId);
 
-$page_content = include_template('my-bets.php', [
+$pageContent = includeTemplate('my-bets.php', [
     'categories' => $categories,
-    'my_bets' => $my_bets,
+    'myBets' => $myBets,
 ]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => 'Мои ставки',
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => 'Мои ставки',
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;

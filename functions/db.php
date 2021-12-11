@@ -2,14 +2,14 @@
 /**
  * Создает ресурс соединения с БД.
  *
- * @param array $db_data параметры подключения из файла config.php
+ * @param array $dbData параметры подключения из файла config.php
  * @return mysqli возвращает ресурс соединения.
  */
-function dbConnect(array $db_data): mysqli
+function dbConnect(array $dbData): mysqli
 {
-    $connection = new mysqli($db_data['host'], $db_data['username'], $db_data['password'], $db_data['dbname']);
-    $connection->set_charset($db_data['charset']);
-
+    $connection = new mysqli($dbData['host'], $dbData['username'], $dbData['password'], $dbData['dbname']);
+    $connection->set_charset($dbData['charset']);
+    // TODO: Сделать проверку подключения, в случае ошибки die(Подключение к БД не удалось).
     return $connection;
 }
 
@@ -37,7 +37,7 @@ function getCategories(mysqli $link): array
 function getLots(mysqli $link, int $limit): array
 {
     $sql = "SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
-                 FROM lots l, categories c WHERE category_id = c.id AND dt_complete > NOW() ORDER BY dt_create DESC LIMIT ?";
+            FROM lots l, categories c WHERE category_id = c.id AND dt_complete > NOW() ORDER BY dt_create DESC LIMIT ?";
 
     $stmt = $link->prepare($sql);
     $stmt->bind_param('i', $limit);
@@ -79,12 +79,12 @@ function numRowsSearchLots(mysqli $link, string $search): int
 function getSearchLots(mysqli $link, string $search, int $limit, int $offset): array
 {
     $sql = "SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
-                 FROM lots l, categories c WHERE category_id = c.id AND MATCH(l.name, description) AGAINST (?) ORDER BY dt_create DESC LIMIT ? OFFSET ?";
+            FROM lots l, categories c WHERE category_id = c.id AND MATCH(l.name, description) AGAINST (?) ORDER BY dt_create DESC LIMIT ? OFFSET ?";
 
     $stmt = $link->prepare($sql);
     $stmt->bind_param('sii', $search, $limit, $offset);
     $stmt->execute();
-    $result= $stmt->get_result();
+    $result = $stmt->get_result();
 
     return $result->fetch_all(MYSQLI_ASSOC);
 }
@@ -99,7 +99,7 @@ function getSearchLots(mysqli $link, string $search, int $limit, int $offset): a
 function getLotID(mysqli $link, int $id): ?array
 {
     $sql = "SELECT l.id, l.name AS lot_name, image, c.name AS cat_name, description, price_start, dt_complete, bid_step, u.name AS user_name, user_id
-                FROM lots l JOIN users u ON user_id = u.id JOIN categories c ON category_id = c.id WHERE l.id = ?";
+            FROM lots l JOIN users u ON user_id = u.id JOIN categories c ON category_id = c.id WHERE l.id = ?";
 
     $stmt = $link->prepare($sql);
     $stmt->bind_param('i', $id);
@@ -139,7 +139,7 @@ function numRowsLotsCategory(mysqli $link, string $category): int
 function getLotsCategory(mysqli $link, string $category, int $limit, int $offset): array
 {
     $sql = "SELECT l.id, l.name AS lot_name, image, c.name AS cat_name, price_start, dt_complete
-                FROM lots l, categories c WHERE category_id = c.id AND c.name = ? ORDER BY dt_create DESC LIMIT ? OFFSET ?";
+            FROM lots l, categories c WHERE category_id = c.id AND c.name = ? ORDER BY dt_create DESC LIMIT ? OFFSET ?";
 
     $stmt = $link->prepare($sql);
     $stmt->bind_param('sii', $category, $limit, $offset);
@@ -155,18 +155,18 @@ function getLotsCategory(mysqli $link, string $category, int $limit, int $offset
  * @param mysqli $link ресурс соединения
  * @param int $id идентификатор авторизованного пользователя
  * @param string $name название лота
- * @param int $cat_id идентификатор категории
+ * @param int $catId идентификатор категории
  * @param string $message описание лота
  * @param int $rate начальная цена
  * @param int $step шаг ставки
  * @param string $date дата окончания торгов
  * @param string $path путь к изображению лота
  */
-function inLots(mysqli $link, int $id, string $name, int $cat_id, string $message, int $rate, int $step, string $date, string $path)
+function inLots(mysqli $link, int $id, string $name, int $catId, string $message, int $rate, int $step, string $date, string $path)
 {
     $sql = 'INSERT INTO lots SET dt_create = NOW(), user_id = ?, name = ?, category_id = ?, description = ?, price_start = ?, bid_step = ?, dt_complete = ?, image = ?';
     $stmt = $link->prepare($sql);
-    $stmt->bind_param('isisiiss', $id, $name, $cat_id, $message, $rate, $step, $date, $path);
+    $stmt->bind_param('isisiiss', $id, $name, $catId, $message, $rate, $step, $date, $path);
     $stmt->execute();
 }
 
@@ -228,14 +228,14 @@ function inUsers(mysqli $link, string $email, string $pass, string $name, string
  *
  * @param mysqli $link ресурс соединения
  * @param int $cost валидная ставка, введенная пользователем в форму
- * @param int $lot_id идентификатор лота
- * @param int $user_id идентификатор пользователя
+ * @param int $lotId идентификатор лота
+ * @param int $userId идентификатор пользователя
  */
-function inBets(mysqli $link, int $cost, int  $lot_id, int $user_id)
+function inBets(mysqli $link, int $cost, int $lotId, int $userId)
 {
     $sql = "INSERT INTO bets SET dt_create = NOW(), price = ?, lot_id = ?, user_id = ?";
     $stmt = $link->prepare($sql);
-    $stmt->bind_param('iii', $cost, $lot_id, $user_id);
+    $stmt->bind_param('iii', $cost, $lotId, $userId);
     $stmt->execute();
 }
 
@@ -280,7 +280,7 @@ function userPassword(mysqli $link, string $email): string
  * @param string $email значение 'email' из формы входа.
  * @return array возвращает массив с данными пользователя
  */
-function UserID(mysqli $link, string $email): array
+function userID(mysqli $link, string $email): array
 {
     $sql = 'SELECT id, name FROM users WHERE email = ?';
     $stmt = $link->prepare($sql);
@@ -311,16 +311,16 @@ function getLotBets(mysqli $link, int $id): array
 /**
  * Получает ставки по идентификатору пользователя
  * @param mysqli $link ресурс соединения
- * @param int $user_id идентификатор пользователя
+ * @param int $userId идентификатор пользователя
  * @return array возвращает массив с полученными ставками.
  */
-function getMyBets(mysqli $link, int $user_id): array
+function getMyBets(mysqli $link, int $userId): array
 {
     $sql = "SELECT l.id, l.image, l.name AS lot_name, l.description, c.name AS cat_name, l.dt_complete, user_winner_id, b.price, b.dt_create
             FROM lots l JOIN categories c ON l.category_id = c.id JOIN bets b ON b.lot_id = l.id  WHERE b.user_id = ? ORDER BY dt_create DESC";
 
     $stmt = $link->prepare($sql);
-    $stmt->bind_param('i', $user_id);
+    $stmt->bind_param('i', $userId);
     $stmt->execute();
     $result = $stmt->get_result();
 

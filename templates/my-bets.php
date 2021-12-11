@@ -11,23 +11,23 @@
     <section class="rates container">
         <h2>Мои ставки</h2>
         <table class="rates__list">
-        <?php foreach ($my_bets as $my_bet):
-              list ($hours, $minutes) = difference_date($my_bet['dt_complete']);
+        <?php foreach ($myBets as $myBet):
+              list ($hours, $minutes) = differenceDate($myBet['dt_complete']);
         ?>
             <tr class="rates__item <?php if (($hours == 0) && ($minutes == 0)): ?>rates__item--end<?php endif ?>"><!-- rates__item--win - ставка выиграла -->
                 <td class="rates__info">
                     <div class="rates__img">
-                        <img src="<?= esc($my_bet['image']) ?>" width="54" height="40" alt="<?= esc($my_bet['lot_name']) ?>">
+                        <img src="<?= esc($myBet['image']) ?>" width="54" height="40" alt="<?= esc($myBet['lot_name']) ?>">
                     </div>
                     <div>
                         <h3 class="rates__title">
-                            <a href="lot.php?id=<?= esc($my_bet['id']) ?>"><?= esc($my_bet['lot_name']) ?></a>
+                            <a href="lot.php?id=<?= esc($myBet['id']) ?>"><?= esc($myBet['lot_name']) ?></a>
                         </h3>
                         <!-- <p>Телефон +7 900 667-84-48, Скайп: Vlas92. Звонить с 14 до 20</p> - добавить абцаз с подробной инфой если ставка выиграла -->
                     </div>
                 </td>
                 <td class="rates__category">
-                    <?= esc($my_bet['cat_name']) ?>
+                    <?= esc($myBet['cat_name']) ?>
                 </td>
                 <td class="rates__timer">
                     <div class="timer <?= timerClass($hours, $minutes) ?>"> <!-- timer--win - Ставка выиграла -->
@@ -35,10 +35,10 @@
                     </div>
                 </td>
                 <td class="rates__price">
-                    <?= esc(price_format($my_bet['price'])) ?>
+                    <?= esc(priceFormat($myBet['price'])) ?>
                 </td>
                 <td class="rates__time">
-                    <?= esc(pastDate($my_bet['dt_create'])) ?>
+                    <?= esc(pastDate($myBet['dt_create'])) ?>
                 </td>
             </tr>
         <?php endforeach ?>
