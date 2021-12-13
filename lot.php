@@ -4,7 +4,6 @@ require __DIR__ . '/init.php'; //Файл инициализации прило�
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 if (!is_numeric($id) || $id <= 0) {
-    // TODO: Переделать на вывод страницы с ошибкой.
     http_response_code(404);
     die;
 }
@@ -12,7 +11,6 @@ if (!is_numeric($id) || $id <= 0) {
 $lotCard = getLotID($connection, $id);
 
 if (is_null($lotCard)) {
-    // TODO: Переделать на вывод страницы с ошибкой.
     http_response_code(404);
     die;
 }
@@ -58,5 +56,3 @@ $layoutContent = includeTemplate('layout.php', [
 ]);
 
 echo $layoutContent;
-
-var_dump($userId);

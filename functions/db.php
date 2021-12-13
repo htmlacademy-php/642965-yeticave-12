@@ -9,7 +9,7 @@ function dbConnect(array $dbData): mysqli
 {
     $connection = new mysqli($dbData['host'], $dbData['username'], $dbData['password'], $dbData['dbname']);
     $connection->set_charset($dbData['charset']);
-    // TODO: Сделать проверку подключения, в случае ошибки die(Подключение к БД не удалось).
+
     return $connection;
 }
 
