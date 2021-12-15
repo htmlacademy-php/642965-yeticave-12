@@ -14,5 +14,7 @@
             "email": "grin-1982@list.ru"
         }
     ],
-    "require": {}
+    "require": {
+        "symfony/mailer": "^5.4"
+    }
 }

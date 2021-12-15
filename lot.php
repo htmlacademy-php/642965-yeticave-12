@@ -4,14 +4,14 @@ require __DIR__ . '/init.php'; //Файл инициализации прило�
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 if (!is_numeric($id) || $id <= 0) {
-    http_response_code(404);
+    template404($categories);
     die;
 }
 
 $lotCard = getLotID($connection, $id);
 
 if (is_null($lotCard)) {
-    http_response_code(404);
+    template404($categories);
     die;
 }
 

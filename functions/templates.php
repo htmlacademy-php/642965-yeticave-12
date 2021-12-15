@@ -164,9 +164,9 @@ function getUserIdFromSession(): ?int
  * функция для отладки
  * выводит в шаблон значения переменных
  *
- * @param mixed $data переменная, значение которой выведится в шаблон.
+ * @param mixed $data переменная, значение которой выведется в шаблон.
  */
-function pr($data)
+function pr(mixed $data): mixed
 {
     echo '<pre>';
     print_r($data);
@@ -204,4 +204,23 @@ function timerResult(string $hours, string $minutes): string
     }
 
     return "$hours:$minutes";
+}
+
+/**
+ * Выводит шаблон страницы с ошибкой
+ * @param array $categories список категорий выводится в шапке и подвале шаблона.
+ */
+function template404(array $categories)
+{
+    $pageContent = includeTemplate('404.php', [
+        'categories' => $categories,
+    ]);
+
+    $layoutContent = includeTemplate('layout.php', [
+        'pageTitle' => 'Ошибка 404',
+        'pageContent' => $pageContent,
+        'categories' => $categories,
+    ]);
+
+    echo $layoutContent;
 }

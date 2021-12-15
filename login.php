@@ -48,4 +48,3 @@ $layoutContent = includeTemplate('layout.php', [
 ]);
 
 echo $layoutContent;
-pr($_COOKIE);
