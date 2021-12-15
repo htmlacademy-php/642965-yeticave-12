@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $lot_id = mysqli_insert_id($connection);
         header('Location: lot.php?id=' . $lot_id);
-        die;
+        die();
     }
 }
 

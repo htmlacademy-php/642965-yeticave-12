@@ -154,7 +154,7 @@ function getUserIdFromSession(): ?int
 
     if (empty($userId)) {
         header('location: login.php');
-        die;
+        die();
     }
 
     return $userId;
@@ -166,7 +166,7 @@ function getUserIdFromSession(): ?int
  *
  * @param mixed $data переменная, значение которой выведется в шаблон.
  */
-function pr(mixed $data): mixed
+function pr($data)
 {
     echo '<pre>';
     print_r($data);

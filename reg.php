@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         inUsers($connection, $reg['email'], $pass, $reg['name'], $reg['message']);
 
         header('Location: login.php');
-        die;
+        die();
     }
 }
 

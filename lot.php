@@ -5,14 +5,14 @@ $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 if (!is_numeric($id) || $id <= 0) {
     template404($categories);
-    die;
+    die();
 }
 
 $lotCard = getLotID($connection, $id);
 
 if (is_null($lotCard)) {
     template404($categories);
-    die;
+    die();
 }
 
 $currentPrice = $lotCard['price_start'];
