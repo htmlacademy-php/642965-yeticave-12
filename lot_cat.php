@@ -7,7 +7,7 @@ $lots = [];
 $currentPage = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
 $currentPage = (is_numeric($currentPage) && $currentPage > 0) ? $currentPage : 1;
 
-if ($_GET['cat_name']) {
+if (isset($_GET['cat_name'])) {
     $catName = filter_input(INPUT_GET, 'cat_name', FILTER_SANITIZE_SPECIAL_CHARS);
     $itemsCount = numRowsLotsCategory($connection, $catName);
 

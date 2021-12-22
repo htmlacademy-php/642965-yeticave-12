@@ -1,6 +1,6 @@
 <?php
 /**
- * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
+ * Подключает шаблон, передает туда данные и возвращает итоговый HTML документ
  *
  * @param string $name Путь к файлу шаблона относительно папки templates
  * @param array $data Ассоциативный массив с данными для шаблона
@@ -153,7 +153,7 @@ function getUserIdFromSession(): ?int
     $userId = $_SESSION['id'] ?? null;
 
     if (empty($userId)) {
-        header('location: login.php');
+        header('Location: login.php');
         die();
     }
 

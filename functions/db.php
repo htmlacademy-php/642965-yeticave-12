@@ -133,7 +133,7 @@ function numRowsLotsCategory(mysqli $link, string $category): int
  * @param mysqli $link ресурс соединения с БД
  * @param string $category категория для сортировки
  * @param int $limit кол-во отображаемых лотов на странице
- * @param int $offset сиещение
+ * @param int $offset смещение
  * @return array результат в виде массива
  */
 function getLotsCategory(mysqli $link, string $category, int $limit, int $offset): array
