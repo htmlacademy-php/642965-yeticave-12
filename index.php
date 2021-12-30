@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/init.php'; //Файл инициализации приложения
+require __DIR__ . '/getwinner.php'; // Определение победителя
 
 $lots = getLots($connection, $config['limit']);
 

@@ -177,10 +177,15 @@ function pr($data)
  * подставляет в шаблон строку с названием класса.
  * @param string $hours строка содержащая время (час)
  * @param string $minutes строка содержащая время (минуты)
+ * @param int $session_id идентификатор авторизованного пользователя
+ * @param int $user_winner идентификатор юзера ставка которого победила
  * @return string возвращает либо строку с названием класса либо пустую
  */
-function timerClass(string $hours, string $minutes): string
+function timerClass(string $hours, string $minutes, int $session_id, int $user_winner): string
 {
+    if ($session_id == $user_winner) {
+        return "timer--win";
+    }
     if (($hours < 1) && ($minutes > 0)) {
         return "timer--finishing";
     }
@@ -195,15 +200,40 @@ function timerClass(string $hours, string $minutes): string
  * подставляет в шаблон либо строку с сообщением либо со временем.
  * @param string $hours строка содержащая время (час)
  * @param string $minutes строка содержащая время (минуты)
+ * @param int $session_id идентификатор авторизованного пользователя
+ * @param int $user_winner идентификатор юзера ставка которого победила
  * @return string возвращает строку с сообщением либо время hh:mm
  */
-function timerResult(string $hours, string $minutes): string
+function timerResult(string $hours, string $minutes, int $session_id, int $user_winner): string
 {
+    if ($session_id == $user_winner) {
+        return "Ставка выиграла";
+    }
     if (($hours == 0) && ($minutes == 0)) {
         return "Торги окончены";
     }
 
     return "$hours:$minutes";
+}
+
+/**
+ * подставляет в шаблон строку с названием класса.
+ * @param string $hours строка содержащая время (час)
+ * @param string $minutes строка содержащая время (минуты)
+ * @param int $session_id идентификатор авторизованного пользователя
+ * @param int $user_winner идентификатор юзера ставка которого победила
+ * @return string возвращает либо строку с названием класса либо пустую
+ */
+function ratesItemClass(string $hours, string $minutes, int $session_id, int $user_winner): string
+{
+    if ($session_id == $user_winner) {
+        return "rates__item--win";
+    }
+    if (($hours == 0) && ($minutes == 0)) {
+        return "rates__item--end";
+    }
+
+    return "";
 }
 
 /**

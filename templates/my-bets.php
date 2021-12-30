@@ -14,7 +14,7 @@
         <?php foreach ($myBets as $myBet):
               list ($hours, $minutes) = differenceDate($myBet['dt_complete']);
         ?>
-            <tr class="rates__item <?php if (($hours == 0) && ($minutes == 0)): ?>rates__item--end<?php endif ?>"><!-- rates__item--win - ставка выиграла -->
+            <tr class="rates__item <?= ratesItemClass($hours, $minutes, $userId, $myBet['user_winner_id']) ?>">
                 <td class="rates__info">
                     <div class="rates__img">
                         <img src="<?= esc($myBet['image']) ?>" width="54" height="40" alt="<?= esc($myBet['lot_name']) ?>">
@@ -23,22 +23,22 @@
                         <h3 class="rates__title">
                             <a href="lot.php?id=<?= esc($myBet['id']) ?>"><?= esc($myBet['lot_name']) ?></a>
                         </h3>
-                        <!-- <p>Телефон +7 900 667-84-48, Скайп: Vlas92. Звонить с 14 до 20</p> - добавить абцаз с подробной инфой если ставка выиграла -->
+                        <p><?php if ($userId == $myBet['user_winner_id']) echo $myBet['contacts'] ?></p>
                     </div>
                 </td>
                 <td class="rates__category">
                     <?= esc($myBet['cat_name']) ?>
                 </td>
                 <td class="rates__timer">
-                    <div class="timer <?= timerClass($hours, $minutes) ?>"> <!-- timer--win - Ставка выиграла -->
-                        <?= esc(timerResult($hours, $minutes)) ?>
+                    <div class="timer <?= timerClass($hours, $minutes, $userId, $myBet['user_winner_id']) ?>">
+                        <?= esc(timerResult($hours, $minutes, $userId, $myBet['user_winner_id'])) ?>
                     </div>
                 </td>
                 <td class="rates__price">
-                    <?= esc(priceFormat($myBet['price'])) ?>
+                    <?= esc(priceFormat($myBet['priceMax'])) ?>
                 </td>
                 <td class="rates__time">
-                    <?= esc(pastDate($myBet['dt_create'])) ?>
+                    <?= esc(pastDate($myBet['dtCreate'])) ?>
                 </td>
             </tr>
         <?php endforeach ?>

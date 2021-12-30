@@ -12,4 +12,5 @@ return [
     'env_local' => 'true',
     'limit' => '6', // колличество отображаемых лотов на странице
     'time_zone' => 'Europe/Kaliningrad', // часовой пояс
+    'base_url' => 'http://' . $_SERVER['HTTP_HOST'], // <адрес домен> к сайту
 ];

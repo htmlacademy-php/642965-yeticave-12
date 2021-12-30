@@ -309,15 +309,15 @@ function getLotBets(mysqli $link, int $id): array
 }
 
 /**
- * Получает ставки по идентификатору пользователя
+ * Получает ставки сделанные пользователем по его идентификатору.
  * @param mysqli $link ресурс соединения
  * @param int $userId идентификатор пользователя
  * @return array возвращает массив с полученными ставками.
  */
 function getMyBets(mysqli $link, int $userId): array
 {
-    $sql = "SELECT l.id, l.image, l.name AS lot_name, l.description, c.name AS cat_name, l.dt_complete, user_winner_id, b.price, b.dt_create
-            FROM lots l JOIN categories c ON l.category_id = c.id JOIN bets b ON b.lot_id = l.id  WHERE b.user_id = ? ORDER BY dt_create DESC";
+    $sql = "SELECT l.id, l.image, l.name AS lot_name, l.description, c.name AS cat_name, l.dt_complete, user_winner_id, MAX(b.price) AS priceMax, MAX(b.dt_create) AS dtCreate, u.name, u.contacts
+            FROM lots l JOIN categories c ON l.category_id = c.id JOIN bets b ON b.lot_id = l.id JOIN users u ON u.id = l.user_id WHERE b.user_id = ? GROUP BY l.id, u.id ORDER BY dtCreate DESC";
 
     $stmt = $link->prepare($sql);
     $stmt->bind_param('i', $userId);
@@ -325,4 +325,67 @@ function getMyBets(mysqli $link, int $userId): array
     $result = $stmt->get_result();
 
     return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+/**
+ * Получаем массив с истекшими лотами, где были сделаны ставки и где победитель еще не определен
+ * @param mysqli $link ресурс соединения
+ * @return array|null Передается id, имя лота, последняя максимальная ставка
+ */
+function getCompleteLots(mysqli $link): ?array
+{
+    $sql = "SELECT l.id AS lotId, l.name AS lotName, MAX(b.price) AS maxPrice
+            FROM lots l JOIN bets b ON b.lot_id = l.id WHERE dt_complete <= NOW() AND user_winner_id = 0 GROUP BY l.id ORDER BY l.id";
+    $result = $link->query($sql);
+
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+/**
+ * Получаем id автора последней максимальной ставки
+ * @param mysqli $link ресурс соединения
+ * @param int $lotId id отыгравшего лота
+ * @param int $maxPrice последняя максимальная ставка
+ * @return array возвращает id победителя
+ */
+function getUserWinner(mysqli $link, int $lotId, int $maxPrice): array
+{
+    $sql = "SELECT user_id AS userId FROM bets WHERE lot_id = ? AND price = ?";
+    $stmt = $link->prepare($sql);
+    $stmt->bind_param('ii', $lotId, $maxPrice);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    return $result->fetch_assoc();
+}
+
+/**
+ * Записываем id победителя в таблицу Lots, поле победитель
+ * @param mysqli $link ресурс соединения
+ * @param int $userWinner id победителя
+ * @param int $lotId id лота
+ */
+function inLotsUserWinner(mysqli $link, int $userWinner, int $lotId)
+{
+    $sql = "UPDATE lots SET user_winner_id = ? WHERE id = ?";
+    $stmt = $link->prepare($sql);
+    $stmt->bind_param('ii',$userWinner, $lotId);
+    $stmt->execute();
+}
+
+/**
+ * Получаем имя победителя и его электронную почту для подстановки в шаблон сообщения
+ * @param mysqli $link ресурс соединения
+ * @param int $winnerId id автора последней максимальной ставки
+ * @return array ассоциативный массив с данными победителя
+ */
+function getContactsUserWinner(mysqli $link, int $userWinner): ?array
+{
+    $sql = "SELECT u.name AS userName, u.email AS userEmail FROM users u JOIN bets b ON u.id = b.user_id WHERE b.user_id = ?";
+    $stmt = $link->prepare($sql);
+    $stmt->bind_param('i', $userWinner);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    return $result->fetch_assoc();
 }

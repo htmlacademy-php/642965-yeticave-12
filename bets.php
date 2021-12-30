@@ -7,6 +7,7 @@ $myBets = getMyBets($connection, $userId);
 $pageContent = includeTemplate('my-bets.php', [
     'categories' => $categories,
     'myBets' => $myBets,
+    'userId' => $userId,
 ]);
 
 $layoutContent = includeTemplate('layout.php', [

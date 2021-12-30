@@ -36,7 +36,7 @@
                             Мин. ставка: <span><?= esc(priceFormat($currentPrice + $lotCard['bid_step'])) ?></span>
                         </div>
                     </div>
-                    <?php if (isset($_SESSION['name']) && ($_SESSION['id'] != $lotCard['user_id']) && ($hours > 0)):
+                    <?php if (isset($_SESSION['name']) && ($_SESSION['id'] != $lotCard['user_id']) && (($hours > 0) || ($minutes > 0))):
                           if ($_SESSION['id'] != ($bets['0']['user_id'] ?? '0')):
                     ?>
                     <form class="lot-item__form" action="lot.php?id=<?= $lotCard['id'] ?>&success=true" method="post" autocomplete="off">
