@@ -1,4 +1,8 @@
 <?php
+/** @var mysqli $connection */
+/** @var array $categories */
+/** @var array $errors */
+
 require __DIR__ . '/init.php'; //Файл инициализации приложения
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

@@ -1,5 +1,8 @@
 <?php
+/** @var mysqli $connection */
+/** @var array $categories */
 session_start();
+
 require __DIR__ . '/init.php'; //Файл инициализации приложения
 $lots = [];
 

@@ -1,4 +1,7 @@
 <?php
+/** @var mysqli $connection */
+/** @var array $categories */
+
 require __DIR__ . '/init.php'; //Файл инициализации приложения
 
 $userId = getUserIdFromSession();

@@ -1,4 +1,7 @@
 <?php
+/** @var array $categories */
+/** @var array $errors */
+
 require __DIR__ . '/init.php'; //Файл инициализации приложения
 
 $userId = getUserIdFromSession();
