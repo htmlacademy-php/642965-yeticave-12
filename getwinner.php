@@ -29,6 +29,6 @@ if (!empty($completeLots)) {
         $contactslWinner = getContactsUserWinner($connection, $userWinner['userId']);
 
         // Отправка сообщения победителю
-        sendMailToWinner( $mailer, $contactslWinner,  $email['from'],$completeLot, $baseUrl);
+        sendMailToWinner($mailer, $contactslWinner, $email['from'], $completeLot, $baseUrl);
     }
 }
