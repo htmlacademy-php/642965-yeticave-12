@@ -1,9 +1,9 @@
 <?php
 /** @var mysqli $connection */
 /** @var array $categories */
-session_start();
 
 require __DIR__ . '/init.php'; //Файл инициализации приложения
+$itemsCount = 0;
 $lots = [];
 
 $currentPage = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
@@ -11,7 +11,6 @@ $currentPage = (is_numeric($currentPage) && $currentPage > 0) ? $currentPage : 1
 
 if (isset($_GET['find']) || isset($_GET['page'])) {
     $searchStr = trim(filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS));
-    $itemsCount = 0;
 
     if (!empty($searchStr)) {
         $itemsCount = numRowsSearchLots($connection, $searchStr);

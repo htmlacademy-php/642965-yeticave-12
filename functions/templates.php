@@ -254,28 +254,3 @@ function template404(array $categories)
 
     echo $layoutContent;
 }
-
-/**
- * Процесс формирования и отправки письма победителю
- * @param object $email Объект для подготовки сообщения
- * @param object $mailer Объект для отправки сообщения
- * @param array $contactslWinner имя и электроная почта победителя
- * @param array $completeLot идентификатор и имя лота победителя
- * @param string $base_url <адрес домен> к сайту из файла config.php
- */
-function sendMail(object $email, object $mailer, array $contactslWinner, array $completeLot, string $base_url)
-{
-    // Подключаем шаблон с текстом письма
-    $text_email = includeTemplate('text_email.php', [
-        'completeLot' => $completeLot,
-        'contactslWinner' => $contactslWinner,
-        'base_url' => $base_url,
-    ]);
-
-    // Отправка сообщения победителю
-    $email->to($contactslWinner['userEmail']);
-    $email->from('keks@phpdemo.ru');
-    $email->subject('Ваша ставка победила');
-    $email->html($text_email);
-    $mailer->send($email);
-}
