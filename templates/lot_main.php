@@ -9,20 +9,20 @@
         </ul>
     </nav>
     <section class="lot-item container">
-        <h2><?= esc($lot_card['lot_name']) ?></h2>
+        <h2><?= esc($lotCard['lot_name']) ?></h2>
         <div class="lot-item__content">
             <div class="lot-item__left">
                 <div class="lot-item__image">
-                    <img src="<?= esc($lot_card['image']) ?>" width="730" height="548" alt="<?= esc($lot_card['lot_name']) ?>">
+                    <img src="<?= esc($lotCard['image']) ?>" width="730" height="548" alt="<?= esc($lotCard['lot_name']) ?>">
                 </div>
                 <p class="lot-item__category">
-                    <span>Автор лота: <?= esc($lot_card['user_name']) ?></span><br>
-                    <span>Категория: <?= esc($lot_card['cat_name']) ?></span>
+                    <span>Автор лота: <?= esc($lotCard['user_name']) ?></span><br>
+                    <span>Категория: <?= esc($lotCard['cat_name']) ?></span>
                 </p>
-                <p class="lot-item__description"><?= esc($lot_card['description']) ?></p>
+                <p class="lot-item__description"><?= esc($lotCard['description']) ?></p>
             </div>
             <div class="lot-item__right">
-            <?php list ($hours, $minutes) = difference_date($lot_card['dt_complete']); ?>
+            <?php list ($hours, $minutes) = differenceDate($lotCard['dt_complete']); ?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer <?php if ($hours < 1): ?> timer--finishing <?php endif ?>">
                         <?= esc($hours) ?>:<?= esc($minutes) ?>
@@ -30,16 +30,16 @@
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
                             <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost"><?= esc(price_format($current_price)) ?></span>
+                            <span class="lot-item__cost"><?= esc(priceFormat($currentPrice)) ?></span>
                         </div>
                         <div class="lot-item__min-cost">
-                            Мин. ставка: <span><?= esc(price_format($current_price + $lot_card['bid_step'])) ?></span>
+                            Мин. ставка: <span><?= esc(priceFormat($currentPrice + $lotCard['bid_step'])) ?></span>
                         </div>
                     </div>
-                    <?php if (isset($_SESSION['name']) && ($_SESSION['id'] != $lot_card['user_id']) && ($hours > 0)):
+                    <?php if (isset($_SESSION['name']) && ($_SESSION['id'] != $lotCard['user_id']) && (($hours > 0) || ($minutes > 0))):
                           if ($_SESSION['id'] != ($bets['0']['user_id'] ?? '0')):
                     ?>
-                    <form class="lot-item__form" action="lot.php?id=<?= $lot_card['id'] ?>&success=true" method="post" autocomplete="off">
+                    <form class="lot-item__form" action="lot.php?id=<?= $lotCard['id'] ?>&success=true" method="post" autocomplete="off">
                         <p class="lot-item__form-item <?php if (!empty($errors)): ?>form__item form__item--invalid<?php endif ?>">
                             <label for="cost">Ваша ставка</label>
                             <input id="cost" type="text" name="cost" value="<?= esc(getPostVal('cost')) ?>" placeholder="12500">
@@ -51,7 +51,7 @@
                     <?php endif ?>
                 </div>
                 <div class="history">
-                    <h3>История ставок (<span><?= esc($bets_count) ?></span>)</h3>
+                    <h3>История ставок (<span><?= esc($betsCount) ?></span>)</h3>
                     <table class="history__list">
                         <?php foreach ($bets as $bet): ?>
                         <tr class="history__item">

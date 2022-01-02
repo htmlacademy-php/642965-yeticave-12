@@ -1,35 +1,37 @@
 <?php
-session_start();
+/** @var mysqli $connection */
+/** @var array $categories */
+/** @var array $errors */
+
 require __DIR__ . '/init.php'; //Файл инициализации приложения
-$errors = [];
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 if (!is_numeric($id) || $id <= 0) {
-    http_response_code(404);
-    die;
+    template404($categories);
+    die();
 }
 
-$lot_card = getLotID($connection, $id);
+$lotCard = getLotID($connection, $id);
 
-if (is_null($lot_card)) {
-    http_response_code(404);
-    die;
+if (is_null($lotCard)) {
+    template404($categories);
+    die();
 }
 
-$current_price = $lot_card['price_start'];
+$currentPrice = $lotCard['price_start'];
 $bets = getLotBets($connection, $id);
-$bets_count = count($bets);
+$betsCount = count($bets);
 
 if (!empty($bets)) {
-    $current_price = max(array_column($bets, 'price'));
+    $currentPrice = max(array_column($bets, 'price'));
 }
 
 // Валидация формы добавления ставки к лоту.
 if (isset($_SESSION['name']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $cost = filter_input(INPUT_POST, 'cost', FILTER_DEFAULT);
-    $errors['step'] = validateStep($cost, $current_price, $lot_card['bid_step']);
+    $errors['step'] = validateStep($cost, $currentPrice, $lotCard['bid_step']);
     $errors = array_filter($errors);
 
     if (!isset($errors['step'])) {
@@ -37,24 +39,24 @@ if (isset($_SESSION['name']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
         inBets($connection, $cost, $id, $_SESSION['id']);
 
         $bets = getLotBets($connection, $id);
-        $current_price = max(array_column($bets, 'price'));
-        $bets_count = count($bets);
+        $currentPrice = max(array_column($bets, 'price'));
+        $betsCount = count($bets);
     }
 }
 
-$page_content = include_template('lot_main.php', [
+$pageContent = includeTemplate('lot_main.php', [
     'categories' => $categories,
-    'lot_card' => $lot_card,
+    'lotCard' => $lotCard,
     'bets' => $bets,
     'errors' => $errors,
-    'bets_count' => $bets_count,
-    'current_price' => $current_price,
+    'betsCount' => $betsCount,
+    'currentPrice' => $currentPrice,
 ]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => $lot_card['lot_name'],
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => $lotCard['lot_name'],
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;

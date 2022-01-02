@@ -125,3 +125,23 @@ GROUP BY email ORDER BY lot_total DESC;
 
 # Поиск в таблице лот по полям название лота и описание
 SELECT * FROM lots WHERE MATCH(name, description) AGAINST ('лыжи палки');
+
+# Запрос по определению победителей в отыгравших лотах ??? ОШИБКА в запросе
+SELECT l.id, MAX(b.user_id) AS user, MAX(b.price) AS last_bet_price
+FROM lots l JOIN bets b ON b.lot_id = l.id WHERE dt_complete <= NOW()
+GROUP BY l.id ORDER BY l.id;
+
+# Запрос по определению победителя в одном лоте
+SELECT u.id, u.email, b.lot_id, MAX(b.id) AS last_bet_id, MAX(b.price) AS last_bet_price
+FROM users u LEFT JOIN bets b ON b.user_id = u.id WHERE b.lot_id = 15
+GROUP BY u.id ORDER BY last_bet_id DESC LIMIT 1;
+
+#----------------------------------------------------------------------------------------
+SELECT l.id, l.image, l.name AS lot_name, l.description, c.name AS cat_name, l.dt_complete, user_winner_id, MAX(b.price) AS maxPrice, MAX(b.dt_create) AS dtCreate, u.name, u.contacts
+FROM lots l JOIN categories c ON l.category_id = c.id
+JOIN bets b ON b.lot_id = l.id JOIN users u ON u.id = b.user_id WHERE b.user_id = 16
+GROUP BY l.id, u.id ORDER BY dtCreate DESC;
+
+
+SELECT l.id AS lotId, l.name AS lotName, MAX(b.price) AS max_price
+FROM lots l JOIN bets b ON b.lot_id = l.id WHERE dt_complete <= NOW() AND user_winner_id = 0 GROUP BY l.id ORDER BY l.id;

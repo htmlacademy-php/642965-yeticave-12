@@ -17,7 +17,7 @@
             <?php endif ?>
             <ul class="lots__list">
                 <?php foreach ($lots as $lot):
-                    list ($hours, $minutes) = difference_date($lot['dt_complete']);
+                    list ($hours, $minutes) = differenceDate($lot['dt_complete']);
                 ?>
                 <li class="lots__item lot">
                     <div class="lot__image">
@@ -31,7 +31,7 @@
                         <div class="lot__state">
                             <div class="lot__rate">
                                 <span class="lot__amount">Стартовая цена</span>
-                                <span class="lot__cost"><?= esc(price_format($lot['price_start'])) ?></span>
+                                <span class="lot__cost"><?= esc(priceFormat($lot['price_start'])) ?></span>
                             </div>
                             <div class="lot__timer timer <?php if ($hours < 1): ?> timer--finishing <?php endif ?>">
                                 <?= esc($hours) ?>:<?= esc($minutes) ?>
@@ -45,18 +45,18 @@
                 <?php endif ?>
             </ul>
         </section>
-        <?php if ($pages_count > 1): ?>
+        <?php if ($pagesCount > 1): ?>
         <ul class="pagination-list">
             <li class="pagination-item pagination-item-prev">
-                <a <?php if ($current_page > 1): ?>href="search.php?search=<?= esc(getPostVal('search')) ?>&page=<?= esc($current_page - 1) ?>"<?php endif ?>>Назад</a>
+                <a <?php if ($currentPage > 1): ?>href="search.php?search=<?= esc(getPostVal('search')) ?>&page=<?= esc($currentPage - 1) ?>"<?php endif ?>>Назад</a>
             </li>
             <?php foreach ($pages as $page): ?>
-            <li class="pagination-item <?php if ($page == $current_page): ?>pagination-item-active<?php endif ?>">
+            <li class="pagination-item <?php if ($page == $currentPage): ?>pagination-item-active<?php endif ?>">
                 <a href="search.php?search=<?= esc(getPostVal('search')) ?>&page=<?= $page ?>"><?= $page ?></a>
             </li>
             <?php endforeach ?>
             <li class="pagination-item pagination-item-next">
-                <a <?php if ($current_page < $pages_count): ?>href="search.php?search=<?= esc(getPostVal('search')) ?>&page=<?= esc($current_page + 1) ?>"<?php endif ?>>Вперед</a>
+                <a <?php if ($currentPage < $pagesCount): ?>href="search.php?search=<?= esc(getPostVal('search')) ?>&page=<?= esc($currentPage + 1) ?>"<?php endif ?>>Вперед</a>
             </li>
         </ul>
         <?php endif ?>

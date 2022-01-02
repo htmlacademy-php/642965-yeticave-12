@@ -1,6 +1,9 @@
 <?php
+/** @var mysqli $connection */
+/** @var array $categories */
+/** @var array $errors */
+
 require __DIR__ . '/init.php'; //Файл инициализации приложения
-$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $rules = [
@@ -27,33 +30,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!count($errors)) {
         if (password_verify($log['password'], userPassword($connection, $log['email']))) {
 
-            session_start();
-            $_SESSION = UserID($connection, $log['email']);
-
-            if (isset($_COOKIE['location'])) {
-                setcookie('location','',time()-10000);
-                header('Location:'. $_COOKIE['location']);
-            }
-            else {
-                header('Location: index.php');
-            }
+            $_SESSION = userID($connection, $log['email']);
+            header('Location: index.php');
             die();
-        }
-        else {
+
+        } else {
             $errors['password'] = 'Вы ввели неверный пароль!';
         }
     }
 }
 
-$page_content = include_template('user_login.php', [
+$pageContent = includeTemplate('user_login.php', [
     'categories' => $categories,
     'errors' => $errors,
 ]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => 'Вход',
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => 'Вход',
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;

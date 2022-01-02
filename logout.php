@@ -1,8 +1,8 @@
 <?php
-session_start();
+require __DIR__ . '/init.php'; //Файл инициализации приложения
 
 $_SESSION = [];
 session_destroy();
 
-header('location: index.php');
+header('Location: index.php');
 die();

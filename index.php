@@ -1,18 +1,22 @@
 <?php
-session_start();
+/** @var mysqli $connection */
+/** @var array $categories */
+/** @var array $config */
+
 require __DIR__ . '/init.php'; //Файл инициализации приложения
+require __DIR__ . '/getwinner.php'; // Определение победителя
 
 $lots = getLots($connection, $config['limit']);
 
-$page_content = include_template('index_main.php', [
+$pageContent = includeTemplate('index_main.php', [
     'categories' => $categories,
     'lots' => $lots,
 ]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => 'Аукцион горнолыжного оборудования',
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => 'Аукцион горнолыжного оборудования',
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;

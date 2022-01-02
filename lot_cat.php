@@ -1,36 +1,38 @@
 <?php
-session_start();
+/** @var mysqli $connection */
+/** @var array $categories */
+
 require __DIR__ . '/init.php';
-$items_count = 0;
+$itemsCount = 0;
 $lots = [];
 
-$current_page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
-$current_page = (is_numeric($current_page) && $current_page > 0) ? $current_page : 1;
+$currentPage = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$currentPage = (is_numeric($currentPage) && $currentPage > 0) ? $currentPage : 1;
 
-if ($_GET['cat_name']) {
-    $cat_name = filter_input(INPUT_GET, 'cat_name', FILTER_SANITIZE_SPECIAL_CHARS);
-    $items_count = numRowsLotsCategory($connection, $cat_name);
+if (isset($_GET['cat_name'])) {
+    $catName = filter_input(INPUT_GET, 'cat_name', FILTER_SANITIZE_SPECIAL_CHARS);
+    $itemsCount = numRowsLotsCategory($connection, $catName);
 
-    $offset = ($current_page - 1) * $config['limit'];
-    $lots = getLotsCategory($connection, $cat_name, $config['limit'], $offset);
+    $offset = ($currentPage - 1) * $config['limit'];
+    $lots = getLotsCategory($connection, $catName, $config['limit'], $offset);
 }
 
-$pages_count = ceil($items_count / $config['limit']);
-$pages = range(1, $pages_count);
+$pagesCount = ceil($itemsCount / $config['limit']);
+$pages = range(1, $pagesCount);
 
-$page_content = include_template('lot_category.php', [
+$pageContent = includeTemplate('lot_category.php', [
     'categories' => $categories,
     'lots' => $lots,
-    'current_page' => $current_page,
-    'pages_count' => $pages_count,
+    'currentPage' => $currentPage,
+    'pagesCount' => $pagesCount,
     'pages' => $pages,
 ]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => 'Результат поиска',
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => 'Результат поиска',
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;
 

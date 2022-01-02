@@ -1,26 +1,22 @@
 <?php
-session_start();
-
-if (empty($_SESSION)) {
-    header('location: reg.php');
-    setcookie('location','add.php',time()+3600);
-    die;
-}
+/** @var array $categories */
+/** @var array $errors */
 
 require __DIR__ . '/init.php'; //Файл инициализации приложения
-$errors = [];
+
+$userId = getUserIdFromSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $cat_id = array_column($categories, 'id');
+    $catId = array_column($categories, 'id');
     $rules = [
         'lot-name' => function ($value) {
             return validateFilled($value);
         },
-        'category' => function ($value) use ($cat_id) {
-            return validateCategory($value, $cat_id);
+        'category' => function ($value) use ($catId) {
+            return validateCategory($value, $catId);
         },
         'message' => function ($value) {
-            return isCorrectLength($value, 20, 200);
+            return validateFilled($value);
         },
         'lot-rate' => function ($value) {
             return validateRate($value);
@@ -55,19 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $lot_id = mysqli_insert_id($connection);
         header('Location: lot.php?id=' . $lot_id);
-        die;
+        die();
     }
 }
 
-$page_content = include_template('add_lot.php', [
+$pageContent = includeTemplate('add_lot.php', [
     'categories' => $categories,
     'errors' => $errors,
 ]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => 'Добавление лота',
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => 'Добавление лота',
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;

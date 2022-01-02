@@ -1,4 +1,5 @@
 <?php
+session_start();
 require __DIR__ . '/functions/templates.php'; // подключение функций для работы с шаблоном.
 require __DIR__ . '/functions/validation.php'; // подключение функций для валидации формы.
 require __DIR__ . '/functions/db.php'; // подключение функций для работы с бд.
@@ -20,4 +21,8 @@ $connection = dbConnect($config['db']);
 // Получение списка категорий, общий запрос для всех страниц
 $categories = getCategories($connection);
 
+// Пустой массив для записи ошибок валидации полей форм.
+$errors = [];
+
+// Устанавливает часовой пояс.
 date_default_timezone_set($config['time_zone']);

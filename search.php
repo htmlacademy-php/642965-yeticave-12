@@ -1,38 +1,40 @@
 <?php
-session_start();
+/** @var mysqli $connection */
+/** @var array $categories */
+
 require __DIR__ . '/init.php'; //Файл инициализации приложения
+$itemsCount = 0;
 $lots = [];
 
-$current_page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
-$current_page = (is_numeric($current_page) && $current_page > 0) ? $current_page : 1;
+$currentPage = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$currentPage = (is_numeric($currentPage) && $currentPage > 0) ? $currentPage : 1;
 
 if (isset($_GET['find']) || isset($_GET['page'])) {
-    $search_str = trim(filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS));
-    $items_count = 0;
+    $searchStr = trim(filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS));
 
-    if (!empty($search_str)) {
-        $items_count = numRowsSearchLots($connection, $search_str);
+    if (!empty($searchStr)) {
+        $itemsCount = numRowsSearchLots($connection, $searchStr);
 
-        $offset = ($current_page - 1) * $config['limit'];
-        $lots = getSearchLots($connection, $search_str, $config['limit'],$offset);
+        $offset = ($currentPage - 1) * $config['limit'];
+        $lots = getSearchLots($connection, $searchStr, $config['limit'], $offset);
     }
 }
 
-$pages_count = ceil($items_count / $config['limit']);
-$pages = range(1, $pages_count);
+$pagesCount = ceil($itemsCount / $config['limit']);
+$pages = range(1, $pagesCount);
 
-$page_content = include_template('search_lot.php', [
+$pageContent = includeTemplate('search_lot.php', [
     'categories' => $categories,
     'lots' => $lots,
-    'current_page' => $current_page,
-    'pages_count' => $pages_count,
+    'currentPage' => $currentPage,
+    'pagesCount' => $pagesCount,
     'pages' => $pages,
-    ]);
+]);
 
-$layout_content = include_template('layout.php', [
-    'page_title' => 'Результат поиска',
-    'page_content' => $page_content,
+$layoutContent = includeTemplate('layout.php', [
+    'pageTitle' => 'Результат поиска',
+    'pageContent' => $pageContent,
     'categories' => $categories,
 ]);
 
-echo $layout_content;
+echo $layoutContent;

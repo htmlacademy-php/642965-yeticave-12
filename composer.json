@@ -1,0 +1,20 @@
+{
+    "name": "grin/yeticave",
+    "description": "website for ski auction",
+    "type": "project",
+    "license": "free",
+    "autoload": {
+        "psr-4": {
+            "Grin\\Yeticave\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Grin-1982",
+            "email": "grin-1982@list.ru"
+        }
+    ],
+    "require": {
+        "symfony/mailer": "^5.4"
+    }
+}
