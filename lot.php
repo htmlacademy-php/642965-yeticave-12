@@ -21,7 +21,7 @@ if (is_null($lotCard)) {
 
 $currentPrice = $lotCard['price_start'];
 $bets = getLotBets($connection, $id);
-$betsCount = count($bets);
+$betsCount = count($bets); // Колличество сделанных ставок к данному лоту
 
 if (!empty($bets)) {
     $currentPrice = max(array_column($bets, 'price'));

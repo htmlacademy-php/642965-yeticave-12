@@ -110,7 +110,7 @@ function getLotID(mysqli $link, int $id): ?array
 }
 
 /**
- * получает колличество строк из таблицы согласно согласно сортировке по категории
+ * получает колличество строк из таблицы согласно сортировке по категории
  *
  * @param mysqli $link ресурс соединения
  * @param string $category категория для сортировки
@@ -151,22 +151,15 @@ function getLotsCategory(mysqli $link, string $category, int $limit, int $offset
 
 /**
  * Добавляет новый лот в БД
- *
  * @param mysqli $link ресурс соединения
  * @param int $id идентификатор авторизованного пользователя
- * @param string $name название лота
- * @param int $catId идентификатор категории
- * @param string $message описание лота
- * @param int $rate начальная цена
- * @param int $step шаг ставки
- * @param string $date дата окончания торгов
- * @param string $path путь к изображению лота
+ * @param array $lot массив с данными для добавления в бд
  */
-function inLots(mysqli $link, int $id, string $name, int $catId, string $message, int $rate, int $step, string $date, string $path)
+function addLots(mysqli $link, int $id, array $lot)
 {
     $sql = 'INSERT INTO lots SET dt_create = NOW(), user_id = ?, name = ?, category_id = ?, description = ?, price_start = ?, bid_step = ?, dt_complete = ?, image = ?';
     $stmt = $link->prepare($sql);
-    $stmt->bind_param('isisiiss', $id, $name, $catId, $message, $rate, $step, $date, $path);
+    $stmt->bind_param('isisiiss', $id, $lot['lot-name'], $lot['category'], $lot['message'], $lot['lot-rate'], $lot['lot-step'], $lot['lot-date'], $lot['path']);
     $stmt->execute();
 }
 
@@ -335,7 +328,7 @@ function getMyBets(mysqli $link, int $userId): array
 function getCompleteLots(mysqli $link): ?array
 {
     $sql = "SELECT l.id AS lotId, l.name AS lotName, MAX(b.price) AS maxPrice
-            FROM lots l JOIN bets b ON b.lot_id = l.id WHERE dt_complete <= NOW() AND user_winner_id = 0 GROUP BY l.id ORDER BY l.id";
+            FROM lots l JOIN bets b ON b.lot_id = l.id WHERE dt_complete <= NOW() AND user_winner_id IS NULL GROUP BY l.id ORDER BY l.id";
     $result = $link->query($sql);
 
     return $result->fetch_all(MYSQLI_ASSOC);

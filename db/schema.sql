@@ -12,7 +12,7 @@ CREATE TABLE lots (
   bid_step INT NOT NULL,
   category_id INT NOT NULL,
   user_id INT NOT NULL,
-  user_winner_id INT
+  user_winner_id INT NULL
 );
 CREATE TABLE categories (
   id INT AUTO_INCREMENT PRIMARY KEY,

@@ -42,14 +42,15 @@ function esc(string $str): string
 }
 
 /**
- * Функция возвращает разницу во времени между будущим и настоящим [часы, минуты]
+ * Функция возвращает разницу между датой окончания лота и настоящим временем
+ * в удобочитаемом формате [часы, минуты]
  *
- * @param string $future_date строка с датой
+ * @param string $dateCompleteLot строка с датой окончания лота
  * @return array возвращает массив с остатком времени в виде [часы, минуты]
  */
-function differenceDate(string $future_date): array
+function differenceDate(string $dateCompleteLot): array
 {
-    $timeExpiresSec = strtotime($future_date) - time();
+    $timeExpiresSec = strtotime($dateCompleteLot) - time();
 
     $hours = floor($timeExpiresSec / 3600); //Колличество часов до нужного события
     $minutes = floor(($timeExpiresSec % 3600) / 60); //Колличество минут до нужного события
@@ -107,16 +108,16 @@ function getNounPluralForm(int $number, string $one, string $two, string $many):
 }
 
 /**
- * из настоящего времени вычитает дату от прошедшего события
+ * Из настоящего времени вычитает дату создания лота
  * полученное время разбивает на часы и минуты
- * в зависимости от условия выводит дату в человеческом формате
+ * в зависимости от результата выводит дату в удобочитаемом формате
  *
- * @param string $date строка с датой
+ * @param string $dateCreateLot строка с датой создания лота
  * @return string возвращает отформатированную строку с датой
  */
-function pastDate(string $date): string
+function pastDate(string $dateCreateLot): string
 {
-    $time = time() - strtotime($date);
+    $time = time() - strtotime($dateCreateLot);
 
     $hours = floor($time / 3600); //Колличество часов до нужного события
     $minutes = floor(($time % 3600) / 60); //Колличество минут до нужного события
@@ -128,7 +129,7 @@ function pastDate(string $date): string
         return $hours . ' ' . getNounPluralForm($hours, 'час', 'часа', 'часов') . ' ' . 'назад';
     }
 
-    $past_date = date_create($date);
+    $past_date = date_create($dateCreateLot);
     return date_format($past_date, 'd.m.y в H:i');
 }
 
@@ -161,7 +162,7 @@ function getUserIdFromSession(): ?int
 }
 
 /**
- * функция для отладки
+ * Функция для отладки
  * выводит в шаблон значения переменных
  *
  * @param mixed $data переменная, значение которой выведется в шаблон.
@@ -174,66 +175,84 @@ function pr($data)
 }
 
 /**
+ * Функция возвращает разницу между датой окончания лота и настоящим временем
+ * @param string $dateCompleteLot строка с датой окончания лота
+ * @return int возвращает целое число больше или меньше 0
+ */
+function diffDateComplete(string $dateCompleteLot): int
+{
+    return strtotime($dateCompleteLot) - time();
+}
+
+/**
+ * Функция подставляет полученную разницу во времени диапазон от 1 до 59
+ * @param string $dateCompleteLot строка с датой окончания лота
+ * @return bool возвращает true если время находится в диапазоне и false есди нет
+ */
+function lastMinute(string $dateCompleteLot): bool
+{
+    if ((diffDateComplete($dateCompleteLot) > 0) && (diffDateComplete($dateCompleteLot) < 60)) {
+        return true;
+    }
+    return false;
+}
+
+/**
  * подставляет в шаблон строку с названием класса.
- * @param string $hours строка содержащая время (час)
- * @param string $minutes строка содержащая время (минуты)
- * @param int $session_id идентификатор авторизованного пользователя
- * @param int $user_winner идентификатор юзера ставка которого победила
+ * @param string $dateCompleteLot строка с датой окончания лота
+ * @param int $userSessionId идентификатор авторизованного пользователя
+ * @param int $userWinnerId идентификатор юзера ставка которого победила
  * @return string возвращает либо строку с названием класса либо пустую
  */
-function timerClass(string $hours, string $minutes, int $session_id, int $user_winner): string
+function ratesItemClass(string $dateCompleteLot, int $userSessionId, ?int $userWinnerId): string
 {
-    if ($session_id == $user_winner) {
+    if ($userSessionId === $userWinnerId) {
+        return "rates__item--win";
+    }
+    if (diffDateComplete($dateCompleteLot) < 0) {
+        return "rates__item--end";
+    }
+    return "";
+}
+
+/**
+ * Подставляет в шаблон строку с названием класса.
+ * @param string $dateCompleteLot строка с датой окончания лота
+ * @param int $userSessionId идентификатор авторизованного пользователя
+ * @param int $userWinnerId идентификатор юзера ставка которого победила
+ * @return string возвращает либо строку с названием класса либо пустую
+ */
+function timerClass(string $dateCompleteLot, int $userSessionId, ?int $userWinnerId): string
+{
+    if ($userSessionId === $userWinnerId) {
         return "timer--win";
     }
-    if (($hours < 1) && ($minutes > 0)) {
+    if ((diffDateComplete($dateCompleteLot) < 3600) && (diffDateComplete($dateCompleteLot) > 0)) {
         return "timer--finishing";
     }
-    if (($hours == 0) && ($minutes == 0)) {
+    if (diffDateComplete($dateCompleteLot) < 0) {
         return "timer--end";
     }
-
     return "";
 }
 
 /**
  * подставляет в шаблон либо строку с сообщением либо со временем.
- * @param string $hours строка содержащая время (час)
- * @param string $minutes строка содержащая время (минуты)
- * @param int $session_id идентификатор авторизованного пользователя
- * @param int $user_winner идентификатор юзера ставка которого победила
+ * @param string $dateCompleteLot строка с датой окончания лота
+ * @param int $userSessionId идентификатор авторизованного пользователя
+ * @param int $userWinnerId идентификатор юзера ставка которого победила
  * @return string возвращает строку с сообщением либо время hh:mm
  */
-function timerResult(string $hours, string $minutes, int $session_id, int $user_winner): string
+function timerResult(string $dateCompleteLot, int $userSessionId, ?int $userWinnerId): string
 {
-    if ($session_id == $user_winner) {
+    if ($userSessionId === $userWinnerId) {
         return "Ставка выиграла";
     }
-    if (($hours == 0) && ($minutes == 0)) {
+    if (diffDateComplete($dateCompleteLot) < 0) {
         return "Торги окончены";
     }
-
-    return "$hours:$minutes";
-}
-
-/**
- * подставляет в шаблон строку с названием класса.
- * @param string $hours строка содержащая время (час)
- * @param string $minutes строка содержащая время (минуты)
- * @param int $session_id идентификатор авторизованного пользователя
- * @param int $user_winner идентификатор юзера ставка которого победила
- * @return string возвращает либо строку с названием класса либо пустую
- */
-function ratesItemClass(string $hours, string $minutes, int $session_id, int $user_winner): string
-{
-    if ($session_id == $user_winner) {
-        return "rates__item--win";
-    }
-    if (($hours == 0) && ($minutes == 0)) {
-        return "rates__item--end";
-    }
-
-    return "";
+    list ($hours, $minutes) = differenceDate($dateCompleteLot);
+    return "{$hours}:{$minutes}";
 }
 
 /**

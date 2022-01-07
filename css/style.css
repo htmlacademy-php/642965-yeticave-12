@@ -984,9 +984,13 @@ input:invalid .form__error{
   -webkit-align-self: flex-end;
   -ms-flex-item-align: end;
   align-self: flex-end;
-  width: 80px;
+  width: 75px;
   margin-bottom: 19px;
   box-sizing: border-box;
+}
+
+.timer--last-minute {
+  width: 175px;
 }
 
 .lot-item__cost-state {
