@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $lot['path'] = 'uploads/' . $_FILES['file_img']['name'];
 
         //Добавляет в БД новый лот
-        inLots($connection, $_SESSION['id'], $lot['lot-name'], $lot['category'], $lot['message'], $lot['lot-rate'], $lot['lot-step'], $lot['lot-date'], $lot['path']);
+        addLots($connection, $_SESSION['id'], $lot);
 
         $lot_id = mysqli_insert_id($connection);
         header('Location: lot.php?id=' . $lot_id);

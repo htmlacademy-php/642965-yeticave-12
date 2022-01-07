@@ -141,7 +141,3 @@ SELECT l.id, l.image, l.name AS lot_name, l.description, c.name AS cat_name, l.d
 FROM lots l JOIN categories c ON l.category_id = c.id
 JOIN bets b ON b.lot_id = l.id JOIN users u ON u.id = b.user_id WHERE b.user_id = 16
 GROUP BY l.id, u.id ORDER BY dtCreate DESC;
-
-
-SELECT l.id AS lotId, l.name AS lotName, MAX(b.price) AS max_price
-FROM lots l JOIN bets b ON b.lot_id = l.id WHERE dt_complete <= NOW() AND user_winner_id = 0 GROUP BY l.id ORDER BY l.id;
