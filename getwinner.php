@@ -1,4 +1,7 @@
 <?php
+/** @var mysqli $connection */
+/** @var array $config */
+
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 

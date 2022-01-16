@@ -16,6 +16,7 @@
     ],
     "require": {
         "symfony/mailer": "^5.4",
-        "ext-mysql": "*"
+        "ext-mysqli": "*",
+        "ext-ctype": "*"
     }
 }

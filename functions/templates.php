@@ -201,7 +201,7 @@ function lastMinute(string $dateCompleteLot): bool
  * подставляет в шаблон строку с названием класса.
  * @param string $dateCompleteLot строка с датой окончания лота
  * @param int $userSessionId идентификатор авторизованного пользователя
- * @param int $userWinnerId идентификатор юзера ставка которого победила
+ * @param int|null $userWinnerId идентификатор юзера ставка которого победила
  * @return string возвращает либо строку с названием класса либо пустую
  */
 function ratesItemClass(string $dateCompleteLot, int $userSessionId, ?int $userWinnerId): string
@@ -219,7 +219,7 @@ function ratesItemClass(string $dateCompleteLot, int $userSessionId, ?int $userW
  * Подставляет в шаблон строку с названием класса.
  * @param string $dateCompleteLot строка с датой окончания лота
  * @param int $userSessionId идентификатор авторизованного пользователя
- * @param int $userWinnerId идентификатор юзера ставка которого победила
+ * @param int|null $userWinnerId идентификатор юзера ставка которого победила
  * @return string возвращает либо строку с названием класса либо пустую
  */
 function timerClass(string $dateCompleteLot, int $userSessionId, ?int $userWinnerId): string
@@ -240,7 +240,7 @@ function timerClass(string $dateCompleteLot, int $userSessionId, ?int $userWinne
  * подставляет в шаблон либо строку с сообщением либо со временем.
  * @param string $dateCompleteLot строка с датой окончания лота
  * @param int $userSessionId идентификатор авторизованного пользователя
- * @param int $userWinnerId идентификатор юзера ставка которого победила
+ * @param int|null $userWinnerId идентификатор юзера ставка которого победила
  * @return string возвращает строку с сообщением либо время hh:mm
  */
 function timerResult(string $dateCompleteLot, int $userSessionId, ?int $userWinnerId): string
