@@ -31,16 +31,16 @@ function getCategories(mysqli $link): array
  * получает список лотов для главной страницы по которым торги еще не завершились.
  *
  * @param mysqli $link Ресурс соединения
- * @param int $limit кол-во отображаемых лотов на странице
+ * @param int $mainLotsQuantity кол-во отображаемых лотов на странице
  * @return array результат в виде массива
  */
-function getLots(mysqli $link, int $limit): array
+function getLots(mysqli $link, int $mainLotsQuantity): array
 {
     $sql = "SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
             FROM lots l, categories c WHERE category_id = c.id AND dt_complete > NOW() ORDER BY dt_create DESC LIMIT ?";
 
     $stmt = $link->prepare($sql);
-    $stmt->bind_param('i', $limit);
+    $stmt->bind_param('i', $mainLotsQuantity);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -72,17 +72,17 @@ function numRowsSearchLots(mysqli $link, string $search): int
  *
  * @param mysqli $link ресурс соединения
  * @param string $search поисковый запрос
- * @param int $limit кол-во отображаемых лотов на странице
+ * @param int $categoryLotsPerPage кол-во отображаемых лотов на странице
  * @param int $offset смещение
  * @return array возвращает массив с данными
  */
-function getSearchLots(mysqli $link, string $search, int $limit, int $offset): array
+function getSearchLots(mysqli $link, string $search, int $categoryLotsPerPage, int $offset): array
 {
     $sql = "SELECT l.id, l.name AS lot_name, price_start, image, c.name AS cat_name, dt_complete
             FROM lots l, categories c WHERE category_id = c.id AND MATCH(l.name, description) AGAINST (?) ORDER BY dt_create DESC LIMIT ? OFFSET ?";
 
     $stmt = $link->prepare($sql);
-    $stmt->bind_param('sii', $search, $limit, $offset);
+    $stmt->bind_param('sii', $search, $categoryLotsPerPage, $offset);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -132,17 +132,17 @@ function numRowsLotsCategory(mysqli $link, string $category): int
  *
  * @param mysqli $link ресурс соединения с БД
  * @param string $category категория для сортировки
- * @param int $limit кол-во отображаемых лотов на странице
+ * @param int $categoryLotsPerPage кол-во отображаемых лотов на странице
  * @param int $offset смещение
  * @return array результат в виде массива
  */
-function getLotsCategory(mysqli $link, string $category, int $limit, int $offset): array
+function getLotsCategory(mysqli $link, string $category, int $categoryLotsPerPage, int $offset): array
 {
     $sql = "SELECT l.id, l.name AS lot_name, image, c.name AS cat_name, price_start, dt_complete
             FROM lots l, categories c WHERE category_id = c.id AND c.name = ? ORDER BY dt_create DESC LIMIT ? OFFSET ?";
 
     $stmt = $link->prepare($sql);
-    $stmt->bind_param('sii', $category, $limit, $offset);
+    $stmt->bind_param('sii', $category, $categoryLotsPerPage, $offset);
     $stmt->execute();
     $result = $stmt->get_result();
 

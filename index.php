@@ -6,7 +6,7 @@
 require __DIR__ . '/init.php'; //Файл инициализации приложения
 require __DIR__ . '/getwinner.php'; // Определение победителя
 
-$lots = getLots($connection, $config['limit']);
+$lots = getLots($connection, $config['pagination']['mainLotsQuantity']);
 
 $pageContent = includeTemplate('index_main.php', [
     'categories' => $categories,
