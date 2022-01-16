@@ -13,11 +13,11 @@ if (isset($_GET['cat_name'])) {
     $catName = filter_input(INPUT_GET, 'cat_name', FILTER_SANITIZE_SPECIAL_CHARS);
     $itemsCount = numRowsLotsCategory($connection, $catName);
 
-    $offset = ($currentPage - 1) * $config['limit'];
-    $lots = getLotsCategory($connection, $catName, $config['limit'], $offset);
+    $offset = ($currentPage - 1) * $config['pagination']['categoryLotsPerPage'];
+    $lots = getLotsCategory($connection, $catName, $config['pagination']['categoryLotsPerPage'], $offset);
 }
 
-$pagesCount = ceil($itemsCount / $config['limit']);
+$pagesCount = ceil($itemsCount / $config['pagination']['categoryLotsPerPage']);
 $pages = range(1, $pagesCount);
 
 $pageContent = includeTemplate('lot_category.php', [

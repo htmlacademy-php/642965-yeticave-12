@@ -1,3 +1,5 @@
+USE yeticave_new;
+
 INSERT INTO categories SET name = 'Доски и лыжи', symbol = 'boards';
 INSERT INTO categories SET name = 'Крепления', symbol = 'attachment';
 INSERT INTO categories SET name = 'Ботинки', symbol = 'boots';

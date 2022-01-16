@@ -7,7 +7,7 @@ return [
         'password' => '',
         'port' => '3306',
         'dbname' => 'yeticave_new',
-        'charset' => 'utfmb4',
+        'charset' => 'utf8mb4',
     ],
     'email' => [ // Настройки (dsn) траспорта
         'user' => 'fd2c6cd72bf938',
@@ -16,8 +16,11 @@ return [
         'port' => '2525',
         'from' => 'keks@phpdemo.ru',
     ],
+    'pagination' => [
+        'mainLotsQuantity' => 6, // Кол-во лотов отображаемых на главной странице
+        'categoryLotsPerPage' => 9, // Кол-во лотов отображаемых на страницах 'лоты по категориям' и 'страница поиска'
+    ],
     'env_local' => 'true',
-    'limit' => '6', // колличество отображаемых лотов на странице
-    'time_zone' => 'Europe/Kaliningrad', // часовой пояс
-    'baseUrl' => 'http://' . $_SERVER['HTTP_HOST'], // <адрес домен> к сайту
+    'time_zone' => 'Europe/Moscow', // часовой пояс
+    'baseUrl' => 'http://' . '642965-yeticave-12', // <адрес домен> к сайту
 ];
