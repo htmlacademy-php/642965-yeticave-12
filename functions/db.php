@@ -369,14 +369,14 @@ function inLotsUserWinner(mysqli $link, int $userWinner, int $lotId)
 /**
  * Получаем имя победителя и его электронную почту для подстановки в шаблон сообщения
  * @param mysqli $link ресурс соединения
- * @param int $winnerId id автора последней максимальной ставки
+ * @param int $userWinnerId id автора последней максимальной ставки
  * @return array ассоциативный массив с данными победителя
  */
-function getContactsUserWinner(mysqli $link, int $userWinner): ?array
+function getContactsUserWinner(mysqli $link, int $userWinnerId): ?array
 {
     $sql = "SELECT u.name AS userName, u.email AS userEmail FROM users u JOIN bets b ON u.id = b.user_id WHERE b.user_id = ?";
     $stmt = $link->prepare($sql);
-    $stmt->bind_param('i', $userWinner);
+    $stmt->bind_param('i', $userWinnerId);
     $stmt->execute();
     $result = $stmt->get_result();
 

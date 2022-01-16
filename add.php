@@ -1,4 +1,5 @@
 <?php
+/** @var mysqli $connection */
 /** @var array $categories */
 /** @var array $errors */
 
