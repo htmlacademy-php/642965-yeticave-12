@@ -91,8 +91,6 @@ function getNounPluralForm(int $number, string $one, string $two, string $many):
 
     switch (true) {
         case ($mod100 >= 11 && $mod100 <= 20):
-            return $many;
-
         case ($mod10 > 5):
             return $many;
 
@@ -272,4 +270,28 @@ function template404(array $categories)
     ]);
 
     echo $layoutContent;
+}
+
+/**
+ * Функция проверяет заданные условия на соответствие
+ * @param int $lotUserID автор лота
+ * @param string $dateCompleteLot дата окончания лота
+ * @param int $betsUserId пользователь сделавший последнюю ставку
+ * @return bool возвращает true или false
+ */
+function showLotBetsForm(int $lotUserID, string $dateCompleteLot, int $betsUserId):bool
+{
+    if (!isset($_SESSION['name'])) {
+        return false;
+    }
+    if ($_SESSION['id'] === $lotUserID) {
+        return false;
+    }
+    if ((diffDateComplete($dateCompleteLot) < 0)) {
+        return false;
+    }
+    if ($_SESSION['id'] === $betsUserId) {
+        return false;
+    }
+    return true;
 }

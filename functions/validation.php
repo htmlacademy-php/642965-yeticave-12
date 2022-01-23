@@ -107,7 +107,7 @@ function validateStep(string $cost, int $price, int $bidStep): ?string
 function dateCompleteValid(string $value, int $minDays): ?string
 {
     $dtComplete = DateTime::createFromFormat('Y-m-d', $value);
-    if ($dtComplete == false || array_sum(DateTime::getLastErrors()) !== 0) {
+    if ($dtComplete === false || array_sum(DateTime::getLastErrors()) !== 0) {
         return "Введите дату в правильном формате";
     }
 
