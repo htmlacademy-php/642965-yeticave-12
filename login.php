@@ -29,14 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!count($errors)) {
         if (password_verify($log['password'], userPassword($connection, $log['email']))) {
-
             $_SESSION = userID($connection, $log['email']);
             header('Location: index.php');
             die();
-
-        } else {
-            $errors['password'] = 'Вы ввели неверный пароль!';
         }
+        $errors['password'] = 'Вы ввели неверный пароль!';
     }
 }
 

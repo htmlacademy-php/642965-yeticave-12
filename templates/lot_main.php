@@ -27,7 +27,7 @@
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer <?php if ($hours < 1) echo "timer--finishing" ?><?php if (lastMinute($lotCard['dt_complete'])) echo " timer--last-minute" ?>">
                         <?= esc($hours) ?>:<?= esc($minutes) ?>
-                        <?php if (lastMinute($lotCard['dt_complete'])) echo "последняя минута"?>
+                        <?php if (lastMinute($lotCard['dt_complete'])) echo "последняя минута" ?>
                     </div>
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
@@ -38,19 +38,17 @@
                             Мин. ставка: <span><?= esc(priceFormat($currentPrice + $lotCard['bid_step'])) ?></span>
                         </div>
                     </div>
-                    <?php if (isset($_SESSION['name']) && ($_SESSION['id'] != $lotCard['user_id']) && ((diffDateComplete($lotCard['dt_complete']) > 0))):
-                        if ($_SESSION['id'] != ($bets['0']['user_id'] ?? '0')):
-                            ?>
-                            <form class="lot-item__form" action="lot.php?id=<?= $lotCard['id'] ?>&success=true"
-                                  method="post" autocomplete="off">
-                                <p class="lot-item__form-item <?php if (!empty($errors)): ?>form__item form__item--invalid<?php endif ?>">
-                                    <label for="cost">Ваша ставка</label>
-                                    <input id="cost" type="text" name="cost" value="<?= esc(getPostVal('cost')) ?>" placeholder="12500">
-                                    <span class="form__error"><?= esc($errors['step'] ?? "") ?></span>
-                                </p>
-                                <button type="submit" class="button">Сделать</button>
-                            </form>
-                        <?php endif ?>
+                    <?php if (showLotBetsForm($lotCard['user_id'], $lotCard['dt_complete'], $bets['0']['user_id'])): ?>
+                        <form class="lot-item__form" action="lot.php?id=<?= $lotCard['id'] ?>&success=true"
+                              method="post" autocomplete="off">
+                            <p class="lot-item__form-item <?php if (!empty($errors)): ?>form__item form__item--invalid<?php endif ?>">
+                                <label for="cost">Ваша ставка</label>
+                                <input id="cost" type="text" name="cost" value="<?= esc(getPostVal('cost')) ?>"
+                                       placeholder="12500">
+                                <span class="form__error"><?= esc($errors['step'] ?? "") ?></span>
+                            </p>
+                            <button type="submit" class="button">Сделать</button>
+                        </form>
                     <?php endif ?>
                 </div>
                 <div class="history">
